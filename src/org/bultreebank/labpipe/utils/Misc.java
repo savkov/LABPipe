@@ -30,6 +30,7 @@ import org.apache.log4j.Logger;
 import org.bultreebank.labpipe.exceptions.IncorrectInputException;
 
 /**
+ * Miscellaneous static methods utilizing different processes in LABPipe.
  *
  * @author Aleksandar Savkov
  */
@@ -37,6 +38,15 @@ public class Misc {
 
     private static final Logger logger = Logger.getLogger(Misc.class.getName());
 
+    /**
+     * Inverts a <code>Properties</code> object. Assumes there are no duplicate 
+     * values in the key-value pairs. In case of duplicates the last duplicate 
+     * in line remains in the resulting object.
+     * 
+     * @param   props   <code>Properties</code> object
+     * 
+     * @return  Properties  inverted properties object
+     */
     public static Properties invertProperties(Properties props) {
 
         Properties iProps = new Properties();
@@ -51,14 +61,22 @@ public class Misc {
 
     }
 
-    public static String join(List<String> al, String glue) {
+    /**
+     * Joins a <code>List</code> of Strings with the provided <code>glue</code>
+     * 
+     * @param   list  List of Strings
+     * @param   glue    joining String
+     * 
+     * @return  String  joint list
+     */
+    public static String join(List<String> list, String glue) {
 
-        if (al.size() == 1) {
-            return al.get(0);
+        if (list.size() == 1) {
+            return list.get(0);
         }
 
         StringBuilder sb = new StringBuilder();
-        for (String token : al) {
+        for (String token : list) {
             sb.append(token);
             sb.append(glue);
         }
@@ -69,6 +87,14 @@ public class Misc {
 
     }
 
+    /**
+     * Joins a <code>String[]</code> with the provided <code>glue</code>
+     * 
+     * @param   ar  array of Strings
+     * @param   glue    joining String
+     * 
+     * @return  String  joint array
+     */
     public static String join(String[] ar, String glue) {
 
         StringBuilder sb = new StringBuilder();
@@ -83,10 +109,28 @@ public class Misc {
 
     }
 
+    /**
+     * Joins two <code>ArrayList</code> objects as columns in a table using <code>colSeparator</code>.
+     * 
+     * @param   colOne  first column list
+     * @param   colTwo  second column list
+     * @param   colSeparator    String separating the two columns
+     * 
+     * @return  String - table
+     */
     public static String joinColumns(ArrayList colOne, ArrayList colTwo, String colSeparator) throws IncorrectInputException {
         return joinColumns((String[]) colOne.toArray(new String[0]), (String[]) colTwo.toArray(new String[0]), colSeparator);
     }
 
+    /**
+     * Joins two <code>String Array</code> objects as columns in a table using <code>colSeparator</code>.
+     * 
+     * @param   colOne  first column array
+     * @param   colTwo  second column array
+     * @param   colSeparator    String separating the two columns
+     * 
+     * @return  String - table
+     */
     public static String joinColumns(String[] colOne, String[] colTwo, String colSeparator) throws IncorrectInputException {
 
         StringBuilder sb = new StringBuilder();
@@ -108,6 +152,13 @@ public class Misc {
 
     }
 
+    /**
+     * Reads <code>InputStream</code> into a <code>String</code>.
+     * 
+     * @param   is  read <code>InputStream</code>
+     * 
+     * @return  String
+     */
     public static String readInputStream(InputStream is) {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
@@ -136,6 +187,13 @@ public class Misc {
 
     }
 
+    /**
+     * Reads <code>InputStream</code> into a <code>String</code> using the default LABPipe encoding.
+     * 
+     * @param   is  read <code>InputStream</code>
+     * 
+     * @return  String
+     */
     public static String readFileInputStream(InputStream is) {
 
         try {
@@ -161,6 +219,12 @@ public class Misc {
 
     }
 
+    /**
+     * Writes an <code>InputStream</code> into an <code>OutputStream</code>.
+     * 
+     * @param   is  input
+     * @param   os output
+     */
     public static void writeStream(InputStream is, OutputStream os) {
 
         try {

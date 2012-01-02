@@ -30,37 +30,130 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * <code>CommandLineUtils</code> packs methods and constants used in the command 
+ * line interface of LABPipe.
  *
  * @author Aleksandar Savkov
  */
 public class CommandLineUtils {
 
     private static final Logger logger = Logger.getLogger(CommandLineUtils.class.getName());
+    /**
+     * Command line parameter key: options path
+     */
     public static final String OPTIONS_PATH_PAR = "-o";
+    /**
+     * Command line parameter key: input file path
+     */
     public static final String INPUT_PAR = "-in";
+    /**
+     * Command line parameter key: output file path
+     */
     public static final String OUTPUT_PAR = "-out";
+    /**
+     * Command line parameter key: input type
+     */
     public static final String INPUT_TYPE_PAR = "-itype";
+    /**
+     * Command line parameter key: output type
+     */
     public static final String OUTPUT_TYPE_PAR = "-otype";
+    /**
+     * Command line parameter key: list of pipe commands
+     */
     public static final String PIPE_COMMANDS_PAR = "-p";
+    /**
+     * Command line parameter key: converter mode
+     */
     public static final String CONVERTER_PAR = "-c";
+    /**
+     * Command line parameter key: working input directory
+     */
     public static final String WORKING_DIR_PAR = "-w";
+    /**
+     * Command line parameter key: working output directory
+     */
     public static final String OUTPUT_DIR_PAR = "-wo";
+    /**
+     * Command line parameters list
+     */
     public static final List<String> PARAMETERS = Arrays.asList(new String[]{OPTIONS_PATH_PAR,
                 INPUT_PAR, OUTPUT_PAR, INPUT_TYPE_PAR, OUTPUT_TYPE_PAR,
                 PIPE_COMMANDS_PAR, CONVERTER_PAR, WORKING_DIR_PAR, OUTPUT_DIR_PAR});
+    /**
+     * Error code: invalid parameter map.
+     * 
+     * Keys and values do not match.
+     */
     public static final int ERROR_INVALID_PARAMETER_MAP = 1;
+    /**
+     * Error code: input/output parameters number mismatch.
+     * 
+     * Input and output parameters differ
+     */
     public static final int ERROR_IO_NUMBER_MISMATCH = 2;
+    /**
+     * Error code: invalid IO parameters
+     * 
+     * Invalid input or output parameter configuration; missing in/out parameter.
+     */
     public static final int ERROR_INVALID_IO_PARAMETERS = 3;
+    /**
+     * Error code: invalid parameter.
+     * 
+     * Key not in the parameter list.
+     */
     public static final int ERROR_INVALID_PARAMETER = 4;
+    /**
+     * Error code: file not found
+     * 
+     * Input file not found.
+     */
     public static final int ERROR_FILE_NOT_FOUND = 5;
+    /**
+     * Extension: text
+     */
     public static final String TXT_EXT = "txt";
+    /**
+     * Extension: line
+     * 
+     * Line encoded data
+     */
     public static final String LINE_EXT = "line";
+    /**
+     * Extension: ctok
+     * 
+     * CLaRK tokens
+     */
     public static final String CTOK_EXT = "ctok";
+    /**
+     * Extension: ctag
+     * 
+     * CLaRK tags
+     */
     public static final String CTAG_EXT = "ctag";
+    /**
+     * Extension: conll
+     * 
+     * CoNLL encoded data
+     */
     public static final String CONLL_EXT = "conll";
+    /**
+     * Extension: xml
+     * 
+     * WebLicht data
+     */
     public static final String XML_EXT = "xml";
+    /**
+     * Extension: out
+     * 
+     * General output extension 
+     */
     public static final String DEFAULT_EXT = "out";
-    public static final String HELP_MESSEGE = "Usage: java -jar LABPipe.jar <key> <value>,...\n"
+    /**
+     * LABPipe command line help message.
+     */
+    public static final String HELP_MESSAGE = "Usage: java -jar LABPipe.jar <key> <value>,...\n"
             + "> java -jar LABPipe.jar -p mpar -itype line -otype conll "
             + " -o conf/conf.xml -in /home/user/Documents/somefile.line "
             + " -out /home/user/Documents/somefile.conll\n"
@@ -100,11 +193,21 @@ public class CommandLineUtils {
             + "	-wo	output directory. Collides with -out\n"
             + "For testing the functionality use:\n"
             + "> java -classpath LABPipe.jar:lib/* org.bultreebank.labpipe.main.Test\n";
+    /**
+     * Copyright message
+     */
     public static final String COPYRIGHT_MESSEGE = "LABPipe  Copyright (C) 2011 Aleksandar Savkov\n"
             + "    This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\n"
             + "    This is free software, and you are welcome to redistribute it\n"
             + "    under certain conditions; type `show c' for details.";
     
+    /**
+     * Returns a <code>String</code> array with all files contained in a directory.
+     * 
+     * @param   dirPath target directory
+     * 
+     * @return  String[]    - list of files
+     */
     public static String[] getFilesInDir(String dirPath) {
 
         File folder = new File(dirPath);
@@ -122,6 +225,15 @@ public class CommandLineUtils {
 
     }
 
+    /**
+     * Generates the output file names of a group of input files based on the <code>outputType</code>.
+     * 
+     * @param   inputFiles  list of input files
+     * @param   outputDir   location of the output files
+     * @param   outputType  output data type used to determine the files extension
+     * 
+     * @return  String[]    - list of output file paths
+     */
     public static String[] generateOutputFileNames(String[] inputFiles, String outputDir, String outputType) {
 
         String[] outputFiles = new String[inputFiles.length];
@@ -144,6 +256,13 @@ public class CommandLineUtils {
 
     }
 
+    /**
+     * Creates a <code>Map</code> based on the command line arguments of LABPipe.
+     * 
+     * @param   args    command line arguments
+     * 
+     * @return  HashMap&lt;String, String&gt;   - parameter <code>Map</code>
+     */
     public static HashMap<String, String> makeParameterMap(String[] args) {
         HashMap<String, String> map = new HashMap();
 
@@ -169,6 +288,14 @@ public class CommandLineUtils {
         return map;
     }
 
+    /**
+     * Builds a <code>List</code> object based on the pipe commands parameter 
+     * (-p) from the command line.
+     * 
+     * @param   commands    command line <code>pipe commands</code> parameter value
+     * 
+     * @return  List&lt;Integer&gt; - LABPipe commands list
+     */
     public static List<Integer> makeCommandsList(String commands) {
 
         ArrayList commandsList = new ArrayList();
@@ -180,10 +307,17 @@ public class CommandLineUtils {
 
     }
 
+    /**
+     * Validates the command line arguments
+     * 
+     * @param   args    command line parameters
+     * 
+     * @return  boolean - <code>true</code> if valid
+     */
     public static boolean validateParameters(String[] args) {
 
         if (args.length == 0) {
-            System.out.println(HELP_MESSEGE);
+            System.out.println(HELP_MESSAGE);
         }
         
         if (args.length % 2 == 1) {
@@ -206,6 +340,13 @@ public class CommandLineUtils {
         return true;
     }
 
+    /**
+     * Generates the appropriate output file extension based on the data <code>type</code>.
+     * 
+     * @param   type    data type
+     * 
+     * @return  String  - output file extension
+     */
     public static String generateOutputExtension(int type) {
 
         switch (type) {
@@ -229,6 +370,13 @@ public class CommandLineUtils {
 
     }
 
+    /**
+     * Parses the data type used in the command line arguments.
+     * 
+     * @param   type    raw data type
+     * 
+     * @return  int     - data type code
+     */
     public static int parseDataType(String type) {
 
         type = type.toLowerCase();
@@ -258,6 +406,13 @@ public class CommandLineUtils {
 
     }
 
+    /**
+     * Parses pipe processing commands from the command line arguments.
+     * 
+     * @param   command pipe processing command
+     * 
+     * @return  int     - pipe processing command code
+     */
     public static int parseProcessCommand(String command) {
 
         if (command.equals("stok")) {
@@ -284,10 +439,23 @@ public class CommandLineUtils {
 
     }
     
+    /**
+     * Throws a command line error with <code>errorCode</code>.
+     * 
+     * @param   errorCode   error code describing the problem with the command line call
+     *
+     */
     public static void throwCommandLineError(int errorCode) {
         throwCommandLineError(errorCode, null);
     }
 
+    /**
+     * Throws a command line error with <code>errorCode</code> and some additional information.
+     * 
+     * @param   errorCode   error code describing the problem with the command line call
+     * @param   par         additional information regarding the error
+     *
+     */
     public static void throwCommandLineError(int errorCode, String par) {
         switch(errorCode) {
             case(CommandLineUtils.ERROR_INVALID_PARAMETER_MAP) : System.out.println("Invalid syntax!"); break;
@@ -297,12 +465,20 @@ public class CommandLineUtils {
             case(CommandLineUtils.ERROR_FILE_NOT_FOUND) : System.out.println(par); break;
         }
         System.out.println("-------------------------------------------------------");
-        System.out.println(HELP_MESSEGE);
+        System.out.println(HELP_MESSAGE);
     }
 
-    public static boolean diffLines(String file1, String file2) {
+    /**
+     * Determines if two files are different based on line by line comparison.
+     * 
+     * @param   testFile   test file
+     * @param   goldFile   gold file
+     * 
+     * @return  boolean - true if different; false if the same
+     */
+    public static boolean diffLines(String testFile, String goldFile) {
 
-        System.out.print("Test file: " + file1 + "\nGold file: " + file2);
+        System.out.print("Test file: " + testFile + "\nGold file: " + goldFile);
 
         BufferedReader br1 = null;
         BufferedReader br2 = null;
@@ -310,8 +486,8 @@ public class CommandLineUtils {
         int count = 0;
         boolean diff = false;
         try {
-            br1 = new BufferedReader(new InputStreamReader(new FileInputStream(file1), "UTF-8"));
-            br2 = new BufferedReader(new InputStreamReader(new FileInputStream(file2), "UTF-8"));
+            br1 = new BufferedReader(new InputStreamReader(new FileInputStream(testFile), "UTF-8"));
+            br2 = new BufferedReader(new InputStreamReader(new FileInputStream(goldFile), "UTF-8"));
             String line1;
             String line2;
 

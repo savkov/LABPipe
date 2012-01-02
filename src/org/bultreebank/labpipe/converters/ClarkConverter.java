@@ -57,7 +57,6 @@ public class ClarkConverter {
      *              document.
      * @param   conllMap    <code>Map</code> containing connections between full
      *                      BTB tags and their respective CoNLL forms.
-     * @return  nothing
      */
     public static void toConll(InputStream is, OutputStream os, Properties conllMap) {
         
@@ -227,7 +226,6 @@ public class ClarkConverter {
      * @param   os  <OutputStream</code> writing the resulting Line encoded data
      * @param   eosToken    end of sentence token to be used for separating 
      *                      sentences in the Line data format.
-     * @return
      */
     public static void toLine(InputStream is, OutputStream os, String eosToken) {
         

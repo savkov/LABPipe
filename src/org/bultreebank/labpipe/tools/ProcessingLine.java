@@ -50,6 +50,11 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
+ * <code>ProcessingLine</code> is the central command class of LABPipe. It 
+ * initializes all tools and keeps them in the memory while waiting for data and
+ * processing commands. An instance of this class may import, process (with a 
+ * given list of pipe commands) and export data an arbitrary number of times, 
+ * while keeping the same processing tools in the memory.
  *
  * @author Aleksandar Savkov
  */
@@ -63,7 +68,7 @@ public class ProcessingLine {
     /* Tokenizers */
     private FstTokenizer FST_TOKENIZER;
     /**
-     * @deprecated current system date
+     * @deprecated since v1.0
      */
     private RegExTokenizer RE_TOKENIZER;
     /* --Escape sequences-- */
@@ -96,9 +101,23 @@ public class ProcessingLine {
     private OutputStream DEFAULT_OUTPUT_STREAM = System.out;
     private int DEFAULT_OUTPUT_FORMAT = ServiceConstants.DATA_CONLL;
 
+    /**
+     * Creates a new empty object
+     */
     public ProcessingLine() {
     }
 
+    /**
+     * Creates a new object based on the LABPipe configuration provided in <code>options</code>
+     * 
+     * @param   options LABPipe configuration
+     * @throws IncorrectInputException 
+     * @throws IncorrectOutputException 
+     * @throws MaltChainedException 
+     * @throws JAXBException 
+     * @throws ClarkConfigurationException
+     * @throws IOException  
+     */
     public ProcessingLine(Configuration options) throws IncorrectInputException, IncorrectOutputException, MaltChainedException, JAXBException, IOException, ClarkConfigurationException {
 
         OPTIONS = options;
@@ -106,7 +125,17 @@ public class ProcessingLine {
 
     }
 
-    private void buildProcessingLine() throws IncorrectInputException, IncorrectOutputException, JAXBException, MaltChainedException, IOException, ClarkConfigurationException {
+    /**
+     * Builds the processing line by initializing all tools and loading all configurations.
+     * 
+     * @throws IncorrectInputException 
+     * @throws IncorrectOutputException 
+     * @throws JAXBException 
+     * @throws MaltChainedException 
+     * @throws ClarkConfigurationException
+     * @throws IOException  
+     */
+    public final void buildProcessingLine() throws IncorrectInputException, IncorrectOutputException, JAXBException, MaltChainedException, IOException, ClarkConfigurationException {
 
         System.out.println("Firing up LABPipe...");
         System.out.println("-------------------------------------------------------");
@@ -118,7 +147,7 @@ public class ProcessingLine {
         FST_TOKENIZER = new FstTokenizer(OPTIONS);
 
         CONLL_MAP.loadConfigFileFromFS(OPTIONS.getConllMapPath(), Configuration.PROPS);
-        CONLL_MAP.loadConfigFileFromFS(OPTIONS.getConllMapInvPath(), Configuration.PROPS);
+        CONLL_MAP_INV.loadConfigFileFromFS(OPTIONS.getConllMapInvPath(), Configuration.PROPS);
 
         // Initiating CLaRK Constraints
         System.out.println("Loading CLaRK processors...");
@@ -138,18 +167,36 @@ public class ProcessingLine {
 
     }
 
+    /**
+     * Loads LABPipe configuration from a file on the file system
+     * 
+     * @param   configPath  file path on the file system
+     * @param   fileType    configuration file type
+     * @throws IOException  
+     */
     public void loadOptions(String configPath, int fileType) throws IOException {
 
         OPTIONS.loadConfigFileFromFS(configPath, fileType);
 
     }
 
+    /**
+     * Loads LABPipe configuration from a file on a server
+     * 
+     */
     public void loadOptionsFromServer() {
 
         OPTIONS.loadConfigFileFromServer(ServiceConstants.CONFIG_PATH_SRV, Configuration.XML);
 
     }
 
+    /**
+     * Imports input data from stream
+     * 
+     * @param   is  input stream
+     * @param   dataType    input data type
+     * @throws IncorrectInputException  
+     */
     public void importInput(InputStream is, int dataType) throws IncorrectInputException {
 
         System.out.print("Importing data...");
@@ -172,6 +219,18 @@ public class ProcessingLine {
 
     }
 
+    /**
+     * Inputs data from <code>String</code>
+     * 
+     * @param   input   input String
+     * @param   dataType    input data type
+     * @throws IOException 
+     * @throws MissingContentException
+     * @throws ParserConfigurationException
+     * @throws JAXBException 
+     * @throws IncorrectInputException 
+     * @throws SAXException  
+     */
     public void importInput(String input, int dataType) throws IOException, ParserConfigurationException, SAXException, JAXBException, IncorrectInputException, MissingContentException {
 
         System.out.print("Importing data...");
@@ -193,12 +252,30 @@ public class ProcessingLine {
 
     }
 
+    /**
+     * Tokenize the current working data using the default tokenizer
+     * @throws IncorrectInputException
+     * @throws InterruptedException
+     * @throws IncorrectParameterValueException 
+     * @throws MissingContentException 
+     * @throws ClarkConfigurationException  
+     */
     public void tokenize() throws IncorrectInputException, InterruptedException, IncorrectParameterValueException, MissingContentException, ClarkConfigurationException {
 
         tokenize(ServiceConstants.PIPE_SFST_TOKENIZE);
 
     }
 
+    /**
+     * Tokenize the current working data using a selected tokenizer identified by <code>tokenizer</code>.
+     * 
+     * @param   tokenizer   tokenizer
+     * @throws IncorrectInputException
+     * @throws InterruptedException 
+     * @throws IncorrectParameterValueException
+     * @throws ClarkConfigurationException
+     * @throws MissingContentException  
+     */
     public void tokenize(int tokenizer) throws IncorrectInputException, InterruptedException, IncorrectParameterValueException, MissingContentException, ClarkConfigurationException {
 
         if (DATA_TYPE != ServiceConstants.DATA_TEXT) {
@@ -226,14 +303,17 @@ public class ProcessingLine {
     }
 
     /**
-     * @deprecated current system date
+     * @throws IncorrectInputException 
+     * @deprecated since v1.0
      */
     public void splitSentences() throws IncorrectInputException {
         splitSentences(1);
     }
 
     /**
-     * @deprecated current system date
+     * @param splitter 
+     * @throws IncorrectInputException 
+     * @deprecated since v1.0
      */
     public void splitSentences(int splitter) throws IncorrectInputException {
 
@@ -244,12 +324,32 @@ public class ProcessingLine {
 
     }
 
+    /**
+     * POS-tags the current working data using the default POS tagger
+     * @throws IncorrectInputException 
+     * @throws IncorrectParameterValueException
+     * @throws SVMTConnectionExceptoin 
+     * @throws ClarkConfigurationException
+     * @throws MissingContentException 
+     * @throws IncorrectOutputException  
+     */
     public void tag() throws IncorrectInputException, SVMTConnectionExceptoin, MissingContentException, IncorrectOutputException, IncorrectParameterValueException, ClarkConfigurationException {
 
         tag(ServiceConstants.PIPE_SVMTOOL_TAG);
 
     }
 
+    /**
+     * POS-tags the current working data using a selected POS tagger identified by <code>tagger</code>
+     * 
+     * @param   tagger  selected POS tagger
+     * @throws IncorrectInputException
+     * @throws SVMTConnectionExceptoin 
+     * @throws MissingContentException 
+     * @throws IncorrectOutputException
+     * @throws ClarkConfigurationException
+     * @throws IncorrectParameterValueException  
+     */
     public void tag(int tagger) throws IncorrectInputException, SVMTConnectionExceptoin, MissingContentException, IncorrectOutputException, IncorrectParameterValueException, ClarkConfigurationException {
 
         if (DATA == null) {
@@ -264,7 +364,7 @@ public class ProcessingLine {
             } else {
                 DATA_TYPE = ServiceConstants.DATA_LINE;
             }
-            DATA = SVMTagger.tagLinesString((String) DATA, OPTIONS.getProperty(Configuration.EOS_TOKEN), OPTIONS);
+            DATA = SVMTagger.tagLinesString((String) DATA, OPTIONS);
             DATA_TYPE = ServiceConstants.DATA_LINE;
         } else if (tagger == ServiceConstants.PIPE_GAZE_TAG) {
             System.out.print("Tagging with Gaze...");
@@ -293,13 +393,31 @@ public class ProcessingLine {
         System.out.println("done");
 
     }
-
+    
+    /**
+     * Lemmatizes the current working data with the default lemmatizer
+     * @throws MissingContentException 
+     * @throws IncorrectInputException
+     * @throws IncorrectOutputException
+     * @throws IncorrectParameterValueException
+     * @throws ClarkConfigurationException  
+     */
     public void lemmatize() throws MissingContentException, IncorrectInputException, IncorrectOutputException, IncorrectParameterValueException, ClarkConfigurationException {
 
         lemmatize(ServiceConstants.PIPE_CLARK_LEMMATIZE);
 
     }
 
+    /**
+     * Lemmatizes the current working data with a selected lemmatizer identified by <code>lemmatizer</code>.
+     * 
+     * @param   lemmatizer  selected lemmatizer
+     * @throws MissingContentException 
+     * @throws IncorrectInputException
+     * @throws IncorrectParameterValueException
+     * @throws IncorrectOutputException
+     * @throws ClarkConfigurationException  
+     */
     public void lemmatize(int lemmatizer) throws MissingContentException, IncorrectInputException, IncorrectOutputException, IncorrectParameterValueException, ClarkConfigurationException {
 
         DATA = CONVERTER.convert(DATA, DATA_TYPE, ServiceConstants.DATA_CLARK_TAGS);
@@ -326,10 +444,29 @@ public class ProcessingLine {
 
     }
 
+    /**
+     * Corrects POS tags with the default corrector. This is also referred to as
+     * CLaRK tagging.
+     * @throws MissingContentException 
+     * @throws IncorrectInputException 
+     * @throws IncorrectOutputException 
+     * @throws ClarkConfigurationException
+     * @throws IncorrectParameterValueException  
+     */
     public void correct() throws MissingContentException, IncorrectInputException, IncorrectOutputException, IncorrectParameterValueException, ClarkConfigurationException {
         correct(ServiceConstants.PIPE_CLARK_CORRECT);
     }
 
+    /**
+     * Corrects POS tags with a selected corrector
+     * 
+     * @param   corrector   selected corrector
+     * @throws MissingContentException 
+     * @throws IncorrectInputException 
+     * @throws IncorrectOutputException
+     * @throws IncorrectParameterValueException 
+     * @throws ClarkConfigurationException  
+     */
     public void correct(int corrector) throws MissingContentException, IncorrectInputException, IncorrectOutputException, IncorrectParameterValueException, ClarkConfigurationException {
 
         DATA = CONVERTER.convert(DATA, DATA_TYPE, ServiceConstants.DATA_CLARK_TAGS);
@@ -356,12 +493,27 @@ public class ProcessingLine {
 
     }
 
+    /**
+     * Dependency parsing with the default Dependency Parser.
+     * @throws MaltChainedException 
+     * @throws MissingContentException
+     * @throws IncorrectInputException
+     * @throws IncorrectOutputException  
+     */
     public void parse() throws MaltChainedException, IncorrectInputException, MissingContentException, IncorrectOutputException {
 
         parse(ServiceConstants.PIPE_MALTPARSER_PARSE);
 
     }
 
+    /**
+     * Dependency parsing with a selected dependency parser <code>parser</code>
+     * @param parser
+     * @throws MaltChainedException 
+     * @throws IncorrectInputException 
+     * @throws MissingContentException
+     * @throws IncorrectOutputException  
+     */
     public void parse(int parser) throws MaltChainedException, IncorrectInputException, MissingContentException, IncorrectOutputException {
 
         DATA = CONVERTER.convert(DATA, DATA_TYPE, ServiceConstants.DATA_CONLL);
@@ -383,6 +535,19 @@ public class ProcessingLine {
 
     }
 
+    /**
+     * Runs the processing line with the specified <code>commands</code>
+     * 
+     * @param   commands    list of processing commands
+     * @throws IncorrectInputException 
+     * @throws InterruptedException 
+     * @throws ClarkConfigurationException
+     * @throws IncorrectParameterValueException
+     * @throws MissingContentException 
+     * @throws IncorrectOutputException 
+     * @throws SVMTConnectionExceptoin
+     * @throws MaltChainedException  
+     */
     public void run(List<Integer> commands) throws IncorrectInputException, InterruptedException, IncorrectParameterValueException, MissingContentException, SVMTConnectionExceptoin, IncorrectOutputException, MaltChainedException, ClarkConfigurationException {
 
         COMMANDS = commands;
@@ -390,6 +555,19 @@ public class ProcessingLine {
 
     }
 
+    /**
+     * Runs the processing line with on the current working data and using the 
+     * current pipe commands. In case the pipe commands are not initialized the 
+     * pipe uses the default configuration from the LABPipe configuration file.
+     * @throws IncorrectInputException 
+     * @throws InterruptedException 
+     * @throws IncorrectParameterValueException 
+     * @throws MissingContentException 
+     * @throws IncorrectOutputException
+     * @throws MaltChainedException
+     * @throws SVMTConnectionExceptoin
+     * @throws ClarkConfigurationException  
+     */
     public void run() throws IncorrectInputException, InterruptedException, IncorrectParameterValueException, MissingContentException, SVMTConnectionExceptoin, IncorrectOutputException, MaltChainedException, ClarkConfigurationException {
 
         if (COMMANDS == null) {
@@ -441,6 +619,15 @@ public class ProcessingLine {
 
     }
 
+    /**
+     * Exports output into <code>os</code>
+     * 
+     * @param   os  output stream
+     * @param   dataType    output data type
+     * @throws IncorrectOutputException
+     * @throws IncorrectInputException 
+     * @throws MissingContentException  
+     */
     public void exportOutput(OutputStream os, int dataType) throws IncorrectOutputException, IncorrectInputException, MissingContentException {
         
         Object data = CONVERTER.convert(DATA, DATA_TYPE, dataType);
@@ -476,15 +663,64 @@ public class ProcessingLine {
         System.out.println("done");
 
     }
+    
+    /**
+     * 
+     * @throws MissingContentException
+     * @throws IncorrectInputException
+     * @throws IncorrectOutputException
+     */
+    public String exportOutput(int dataType) throws MissingContentException, IncorrectInputException, IncorrectOutputException {
+        Object data = CONVERTER.convert(DATA, DATA_TYPE, dataType);
+        
+        System.out.print("Exporting data...");
 
+        try {
+            
+            if (dataType == ServiceConstants.DATA_LINE) {
+                return (String)data;
+            } else if (dataType == ServiceConstants.DATA_CONLL) {
+                return ((Conll) data).toString();
+            } else if (dataType == ServiceConstants.DATA_CLARK_TAGS
+                    || dataType == ServiceConstants.DATA_CLARK_TOKENS) {
+                XmlUtils.printToString(((Document) data));
+            } else if (dataType == ServiceConstants.DATA_WEBLICHT) {
+                return ((WebLicht) data).toString();
+            }
+            
+        } catch (ClassCastException ex) {
+            logger.log(Level.WARNING, "ClassCastException during output conversion.", ex);
+            throw new IncorrectInputException("Unacceptable data format contained in the pipe. Data cannot be extracted.");
+        } catch (UnsupportedEncodingException ex) {
+            logger.log(Level.SEVERE, ServiceConstants.EXCEPTION_UNSUPPORTED_ENCODING, ex);
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, ServiceConstants.EXCEPTION_IO, ex);
+        }
+        
+        return null;
+    }
+
+    /**
+     * Gets the list of commands
+     * 
+     * @return  List&lt;Integer&gt;
+     */
     public List<Integer> getCommands() {
         return COMMANDS;
     }
 
+    /**
+     * Sets the list of processing commands
+     * 
+     * @param   commands    list of processing commands
+     */
     public void setCommands(List commands) {
         COMMANDS = commands;
     }
 
+   /**
+     * @deprecated since v1.0
+     */
     public WebLicht getData() {
 
         return DOC;
@@ -492,7 +728,8 @@ public class ProcessingLine {
     }
 
     /**
-     * @deprecated current system date
+     * @param doc 
+     * @deprecated since v1.0
      */
     public void setData(WebLicht doc) {
 
@@ -501,7 +738,7 @@ public class ProcessingLine {
     }
 
     /**
-     * @deprecated current system date
+     * @deprecated since v1.0
      */
     public boolean containsData(Class c) {
 
@@ -515,19 +752,40 @@ public class ProcessingLine {
 
     }
 
+    /**
+     * Clears current working data.
+     */
     public void clear() {
         DOC = new WebLicht();
         DATA = null;
     }
     
+    /**
+     * Sets <code>verbose</code> mode.
+     * 
+     * Default is false
+     * @param verbose 
+     */
     public void setVerbose(boolean verbose) {
         VERBOSE = verbose;
     }
     
+    /**
+     * Sets the default output stream for the command line interaction.
+     * 
+     * Default is <code>System.out</code>
+     * @param os 
+     */
     public void setDefaultOutputStream(OutputStream os) {
         DEFAULT_OUTPUT_STREAM = os;
     }
     
+    /**
+     * Sets default output format for <code>verbose</code> mode data snapshots. 
+     * 
+     * Default is CoNLL
+     * @param dof 
+     */
     public void setDefaultOutputFormat(int dof) {
         DEFAULT_OUTPUT_FORMAT = dof;
     }

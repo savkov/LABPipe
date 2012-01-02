@@ -42,6 +42,9 @@ import org.bultreebank.labpipe.utils.Configuration;
 import org.bultreebank.labpipe.utils.ServiceConstants;
 
 /**
+ * <code>GazeTagger</code> is a wrapper around the Gaze project by Georgi 
+ * Georgiev. The input of this tagger is line based entries of 
+ * <code>token</code>, <code>suggested tag(s)</code> and <code>O</code>.
  *
  * @author Aleksandar Savkov
  */
@@ -49,6 +52,14 @@ public class GazeTagger {
     
     private static final Logger logger = Logger.getLogger(GazeTagger.class.getName());
 
+    /**
+     * Tags the WebLicht document <code>tokens</code> and adds <code>tags</code>
+     * entries in the same document.
+     * 
+     * @param   doc WebLicht document
+     * @param   options LABPipe configuration
+     * @throws IncorrectInputException  
+     */
     public static void tagWebLicht(WebLicht doc, Configuration options) throws IncorrectInputException {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
@@ -67,6 +78,13 @@ public class GazeTagger {
 
     }
 
+    /**
+     * Tags a Gaze data format stream and outputs it in another stream.
+     * 
+     * @param   is  input stream (Gaze)
+     * @param   os  output stream (Line)
+     * @param   options LABPipe configuration
+     */
     public static void tagStream(InputStream is, OutputStream os, Configuration options) {
 
         PropertyConfigurator.configure(options.getGazeConf());
@@ -76,6 +94,14 @@ public class GazeTagger {
 
     }
     
+    /**
+     * Tags a Gaze data format String.
+     * 
+     * @param   input   input string
+     * @param   options LABPipe configuration
+     * 
+     * @return  String  - Line encoded data
+     */
     public static String tagString(String input, Configuration options) {
         ByteArrayInputStream bais = null;
         try {

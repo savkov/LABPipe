@@ -21,7 +21,7 @@ import java.util.Set;
 
 /**
  *
- * @deprecated current system date
+ * @deprecated since v1.0
  * @author Aleksandar Savkov
  */
 public class SentenceBoundaryOptions {

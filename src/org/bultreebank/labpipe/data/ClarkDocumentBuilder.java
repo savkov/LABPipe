@@ -31,6 +31,8 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
+ * <code>ClarkDocumentBuilder</code> builds CLaRK documents, which are in fact 
+ * DOM XML org.xml.dom.Document objects. 
  *
  * @author Aleksandar Savkov
  */
@@ -40,11 +42,23 @@ public class ClarkDocumentBuilder {
     private static DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
     private static DocumentBuilder db;
 
+    /**
+     * Builds an empty org.xml.dom.Document object.
+     * @return Document
+     */
     public static Document buildClarkDocument() {
         iniDocFactory();
         return db.newDocument();
     }
 
+    /**
+     * Parses the <code>doc</code> into a org.xml.dom.Document object.
+     * 
+     * @param   doc <code>String</code> containing a CLaRK document.
+     * 
+     * @return org.xml.dom.Document - CLaRK document
+     * @throws MissingContentException  
+     */
     public static Document buildClarkDocument(String doc) throws MissingContentException {
         
         if (doc == null || doc.equals("")) {
@@ -64,6 +78,12 @@ public class ClarkDocumentBuilder {
         
     }
 
+    /**
+     * Parses the <code>InputStream</code> into a org.xml.dom.Document object.
+     * 
+     * @param   is  <code>InputStream</code> containing a CLaRK document
+     * @return Document - CLaRK document 
+     */
     public static Document buildClarkDocument(InputStream is) {
         try {
             iniDocFactory();
@@ -78,6 +98,11 @@ public class ClarkDocumentBuilder {
         
     }
 
+    /**
+     * 
+     * Initializes <code>DocumentBuilder</code>
+     * 
+     */
     private static void iniDocFactory() {
         try {
             dbf.setValidating(false);
@@ -90,7 +115,6 @@ public class ClarkDocumentBuilder {
             logger.log(Level.SEVERE, ServiceConstants.EXCEPTION_PARSER_CONFIGURATION, ex);
         }
     }
-
     
     
 }

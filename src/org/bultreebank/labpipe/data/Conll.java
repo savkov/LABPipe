@@ -52,27 +52,76 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
+ * <code>Conll</code> represents the CoNLL data format used in LABPipe. It extends 
+ * ArrayList&lt;ArrayList&lt;String&gt;&gt; placing each sentence in a separate 
+ * ArrayList&lt;String&gt; object each token (and its properties) being an item 
+ * in it.
  *
  * @author Aleksandar Savkov
  */
 public class Conll extends ArrayList<ArrayList<String>> {
 
     private static final Logger logger = Logger.getLogger(Conll.class.getName());
+    /**
+     * Token index used in <code>Map</code> objects produced by {@link DataUtils#conllLineAsMap}
+     */
     public static final int TOKEN_INDEX = 0;
+    /**
+     * Token form index used in <code>Map</code> objects produced by {@link DataUtils#conllLineAsMap}
+     */
     public static final int TOKEN_FORM = 1;
+    /**
+     * Token lemma index used in <code>Map</code> objects produced by {@link DataUtils#conllLineAsMap}
+     */
     public static final int TOKEN_LEMMA = 2;
+    /**
+     * Token CPOS tag (long tag; first two characters of the full BTB tag) index used 
+     * in <code>Map</code> objects produced by {@link DataUtils#conllLineAsMap}
+     */
     public static final int TOKEN_CPOSTAG = 3;
+    /**
+     * Token short POS tag (usually the first character of the full BTB tag) index
+     * used in <code>Map</code> objects produced by {@link DataUtils#conllLineAsMap}
+     */
     public static final int TOKEN_POSTAG = 4;
+    /**
+     * Token POS tag features index used in <code>Map</code> objects produced by 
+     * {@link DataUtils#conllLineAsMap}
+     */
     public static final int TOKEN_FEATS = 5;
+    /**
+     * Token dependency head index used in <code>Map</code> objects produced by {@link DataUtils#conllLineAsMap}
+     */
     public static final int TOKEN_HEAD = 6;
+    /**
+     * Token dependency relation index used in <code>Map</code> objects produced by {@link DataUtils#conllLineAsMap}
+     */
     public static final int TOKEN_DEPREL = 7;
+    /**
+     * Token projectile dependency head index used in <code>Map</code> objects produced by {@link DataUtils#conllLineAsMap}
+     */
     public static final int TOKEN_PHEAD = 8;
+    /**
+     * Token projectile dependency relation index used in <code>Map</code> objects produced by {@link DataUtils#conllLineAsMap}
+     */
     public static final int TOKEN_PDEPREL = 9;
+    /**
+     * Token BTB full-tag index used in <code>Map</code> objects produced by {@link DataUtils#conllLineAsMap}
+     */
     public static final int TOKEN_FULLTAG = 10;
 
+    /**
+     * Creates empty <code>Conll</code> object.
+     */
     public Conll() {
     }
 
+    /**
+     * Creates <code>Conll</code> object from a CoNLL data format <code>String</code>.
+     * 
+     * @param   conll   CoNLL data formated <code>String</code>.
+     * 
+     */
     public Conll(String conll) {
         try {
             this.loadConll(new ByteArrayInputStream(conll.getBytes(ServiceConstants.PIPE_CHARACTER_ENCODING)));
@@ -82,12 +131,22 @@ public class Conll extends ArrayList<ArrayList<String>> {
 
     }
 
+    /**
+     * Parses the CoNLL encoded data from the <code>InputStream</code> into a 
+     * <code>Conll</code> object
+     * 
+     * @param   is  CoNLL encoded data <code>InputStream</code>
+     * 
+     */
     public Conll(InputStream is) {
 
         this.loadConll(is);
 
     }
 
+    /*
+     * Loads Conll from an input stream.
+     */
     private void loadConll(InputStream is) {
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(is, ServiceConstants.PIPE_CHARACTER_ENCODING));
@@ -120,6 +179,11 @@ public class Conll extends ArrayList<ArrayList<String>> {
         }
     }
 
+    /**
+     * Converts this object into a <code>String</code> using the CoNLL data encoding format.
+     * 
+     * @return String
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -133,6 +197,15 @@ public class Conll extends ArrayList<ArrayList<String>> {
         return sb.toString();
     }
 
+    /**
+     * Converts this object to a Line encoded data <code>String</code> and prints it into the <code>OutputStream</code>.
+     * 
+     * @param   os  data <code>OutputStream</code>
+     * @param   eosToken    end of sentence token
+     * @param   iConllMap   <code>Map</code> containing back connections between
+     *                      POS tags in CoNLL representation and their original 
+     *                      BTB forms.
+     */
     public void toLine(OutputStream os, String eosToken, Properties iConllMap) {
 
         try {
@@ -147,6 +220,15 @@ public class Conll extends ArrayList<ArrayList<String>> {
 
     }
 
+    /**
+     * Converts this object to a Line encoded data <code>String</code>.
+     * 
+     * @param   eosToken    end of sentence token
+     * @param   iConllMap   <code>Map</code> containing back connections between
+     *                      POS tags in CoNLL representation and their original 
+     *                      BTB forms.
+     * @return  String
+     */
     public String toLine(String eosToken, Properties iConllMap) {
 
         StringBuilder lines = new StringBuilder();
@@ -161,8 +243,9 @@ public class Conll extends ArrayList<ArrayList<String>> {
                 lines.append(" ");
                 lines.append(lineSplits[4]);
                 String iFeatures = iConllMap.getProperty(lineSplits[5]);
-                if (iFeatures != null)
+                if (iFeatures != null) {
                     lines.append(iFeatures);
+                }
                 if (!lineSplits[2].matches("_")) {
                     lines.append(" ");
                     lines.append(lineSplits[2]);
@@ -180,6 +263,14 @@ public class Conll extends ArrayList<ArrayList<String>> {
 
     }
 
+    /**
+     * Converts this object into CLaRK document and prints it into the <code>OutputStream</code>.
+     * 
+     * @param   os  CLaRK document <code>OutputStream</code>
+     * @param   iConllMap   <code>Map</code> containing back connections between
+     *                      POS tags in CoNLL representation and their original 
+     *                      BTB forms.
+     */
     public void toClark(OutputStream os, Properties iConllMap) {
 
         try {
@@ -224,6 +315,14 @@ public class Conll extends ArrayList<ArrayList<String>> {
 
     }
 
+    /**
+     * Converts this object into CLaRK document.
+     * 
+     * @param   iConllMap   <code>Map</code> containing back connections between
+     *                      POS tags in CoNLL representation and their original 
+     *                      BTB forms.
+     * @return Document - CLaRK document
+     */
     public Document toClark(Properties iConllMap) {
 
         Document clarkDoc = ClarkDocumentBuilder.buildClarkDocument();
@@ -238,7 +337,7 @@ public class Conll extends ArrayList<ArrayList<String>> {
             root.appendChild(sentence);
             for (String l : s) {
 
-                HashMap<Integer,String> conllLineMap = DataUtils.conllLineAsMap(l, iConllMap);
+                HashMap<Integer, String> conllLineMap = DataUtils.conllLineAsMap(l, iConllMap);
                 token = clarkDoc.createElement("tok");
                 sentence.appendChild(token);
                 token.setTextContent(conllLineMap.get(Conll.TOKEN_FORM));
@@ -255,12 +354,32 @@ public class Conll extends ArrayList<ArrayList<String>> {
         return clarkDoc;
 
     }
-    
+
+    /**
+     * Converts this object into {@link WebLicht} document
+     * 
+     * @param   iConllMap   <code>Map</code> containing back connections between
+     *                      POS tags in CoNLL representation and their original 
+     *                      BTB forms.
+     * 
+     * @return {@link WebLicht}
+     * 
+     */
     public WebLicht toWebLicht(Properties iConllMap) {
         return toWebLicht(this, iConllMap);
     }
 
-    public WebLicht toWebLicht(Conll conll, Properties iConllMap) {
+    /**
+     * Converts the <code>Conll</code> object into a {@link WebLicht} document.
+     * 
+     * @param   conll   {@link Conll} object
+     * @param   iConllMap   <code>Map</code> containing back connections between
+     *                      POS tags in CoNLL representation and their original 
+     *                      BTB forms.
+     * 
+     * @return  {@link WebLicht}
+     */
+    public static WebLicht toWebLicht(Conll conll, Properties iConllMap) {
 
         WebLicht doc = new WebLicht();
 

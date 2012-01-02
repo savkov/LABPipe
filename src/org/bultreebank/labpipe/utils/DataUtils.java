@@ -37,6 +37,7 @@ import org.apache.commons.lang.StringUtils;
 import org.bultreebank.labpipe.data.Conll;
 
 /**
+ * <code>DataUtils</code> utilizes processes related to data the formats and object in LABPipe.
  *
  * @author Aleksandar Savkov
  */
@@ -44,6 +45,16 @@ public class DataUtils {
     
     private static final Logger logger = Logger.getLogger(DataUtils.class.getName());
     
+    /**
+     * Finds the correct object referencing the <code>ref</code> in a list of 
+     * data objects used in DSpin objects. For example, finds a <code>Tag</code>
+     * referencing  a <code>Token</code> in a <code>List&lt;Token&gt;</code>.
+     * 
+     * @param   list    data objects list
+     * @param   ref     reference object
+     * 
+     * @return  Object  - referencing object
+     */
     public static Object getBackRef(List list, Object ref) {
 
         if (ref == null || list == null) {
@@ -96,6 +107,17 @@ public class DataUtils {
 
     }
     
+    /**
+     * Converts a <code>DSpin Sentence</code> object into a 
+     * <code>ArrayList&lt;String&gt;</code> that can be used in constructing 
+     * {@link Conll} objects.
+     * 
+     * @param   sentence    <code>DSpin Sentence</code> object
+     * @param   cm          {@link ClassMap} object
+     * @param   conllMap    <code>Map</code> linking BTB tags to their CoNLL representation forms (features)
+     * 
+     * @return  ArrayList&lt;String&gt;
+     */
     public static ArrayList<String> dspinSentAsConllArray(Sentence sentence, ClassMap cm, Properties conllMap) {
         
         ArrayList<String> conllSentence = new ArrayList();
@@ -234,6 +256,15 @@ public class DataUtils {
 
     }
     
+    /**
+     * Converts a token encoded in Line data format into CoNLL
+     * 
+     * @param   line    Line encoded token
+     * @param   id      ID of the current token
+     * @param   conllMap    <code>Map</code> linking BTB tags to their CoNLL representation forms (features)
+     * 
+     * @return  String  - CoNLL encoded token
+     */
     public static String lineTokenToConllToken(String line, int id, Properties conllMap)
             throws ArrayIndexOutOfBoundsException {
 
@@ -304,6 +335,15 @@ public class DataUtils {
 
     }
     
+    /**
+     * Builds a <code>HashMap</code> from a CoNLL line (token).
+     * 
+     * @param   line    CoNLL line (token)
+     * @param   iConllMap   inverted CoNLL <code>Map</code> that links long POS 
+     *                      tags and features to original BTB tags.
+     * 
+     * @return HashMap&ltInteger, String&gt;
+     */
     public static HashMap<Integer, String> conllLineAsMap(String line, Properties iConllMap) {
 
         String splitter = (line.contains("\t")) ? "\t" : " ";

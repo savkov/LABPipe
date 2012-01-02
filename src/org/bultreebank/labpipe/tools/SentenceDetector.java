@@ -50,7 +50,7 @@ import org.bultreebank.labpipe.utils.ServiceConstants;
 
 /**
  *
- * @deprecated current system date
+ * @deprecated since v1.0
  * @author Aleksandar Savkov
  */
 public class SentenceDetector {

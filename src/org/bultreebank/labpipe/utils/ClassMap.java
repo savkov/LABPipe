@@ -21,11 +21,20 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * <code>ClassMap</code> creates a <code>Map</code> from a list of objects using
+ * their classes as keys and them as values. In case there are objects of the 
+ * same class entries are overwritten.
  *
  * @author Aleksandar Savkov
  */
 public class ClassMap extends HashMap<Class, Object> {
 
+    /**
+     * Creates a <code>ClassMap</code> object from a <code>list</code>.
+     * 
+     * @param   list    list of objects of different classes
+     * 
+     */
     public ClassMap (List<Object> list) {
         for (Object item : list)  {
             this.put(item.getClass(), item);

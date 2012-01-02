@@ -26,15 +26,26 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * <code>RegExDictionary</code> builds a Regular Expression <code>String</code> 
+ * representation of dictionary stored in a text file. For example, 
+ * <code>apple</code>, <code>banana</code>, <code>orange</code> will be 
+ * represented as <code>(apple|banana|orange)</code>.
+ * 
  * @author Aleksandar Savkov
  */
 public class RegExDictionary {
 
     private static String EXCEPTIONS;
     private Configuration OPTIONS;
-    private final Logger logger = Logger.getLogger(RegExDictionary.class.getName());
+    private static final Logger logger = Logger.getLogger(RegExDictionary.class.getName());
 
+    /**
+     * Constructs a dictionary object based on the dictionary path listed in the 
+     * <code>Configuration</code> parameter.
+     * 
+     * @param   options LABPipe {@link Configuration} object
+     * 
+     */
     public RegExDictionary(Configuration options) throws IOException {
         
         OPTIONS = options;
@@ -44,6 +55,9 @@ public class RegExDictionary {
 
     }
 
+    /*
+     * Reads in the dictionry as a String from the provided file path and calls the building method.
+     */
     private String readInDictionary(String fileName) {
         ArrayList<String> dict = new ArrayList();
         try {
@@ -58,6 +72,9 @@ public class RegExDictionary {
         return buildRegExDictionary(dict);
     }
 
+    /*
+     * Transforms the String representation of the dictionary into RegExes
+     */
     private String buildRegExDictionary(ArrayList<String> dict) {
         StringBuilder re = new StringBuilder();
         re.append("(?:");
@@ -69,10 +86,21 @@ public class RegExDictionary {
         return re.toString();
     }
 
+    /**
+     * Sets the RegEx value of the dictionary
+     * 
+     * @param   dict    RegEx <code>String</code> dictionary representation
+     * 
+     */
     public void setRegExDictionary(String dict) {
         EXCEPTIONS = dict;
     }
 
+    /**
+     * Retrieves a <code>String</code> containing the RegEx representation of the dictionary.
+     * 
+     * @return  String - RegEx dictionary
+     */
     public String getRegExDictionary() {
         return EXCEPTIONS;
     }

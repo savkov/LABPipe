@@ -23,11 +23,22 @@ package org.bultreebank.labpipe.utils;
  */
 public class ServiceConstants {
     
-    /*
-     * Server Constants
+    /* Server Constants */
+    
+    /**
+     * Default path relative to the working directory containing the configuration file.
      */
     public static final String CONFIG_PATH_SRV = "conf/conf.xml";
+    /**
+     * Default URL of the <code>FileReader</code> servlet.
+     * 
+     * //TODO This URL may not be the best idea. Try maybe using a relative path.
+     * 
+     */
     public static final String FILE_READER_SERVLET_URL = "http://localhost:8080/SVMTWebTagger/servlet/FileReaderServlet";
+    /**
+     * Default System separator.
+     */
     public static final String SYSTEM_SEPARATOR = System.getProperty("file.separator");
     
     /*

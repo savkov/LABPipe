@@ -78,6 +78,9 @@ public class LineConverter {
      * @param   conllMap    <code>Map</code> containing connections between full
      *                      BTB tags and their respective CoNLL forms.
      * @return  {@link Conll}
+     * @throws UnsupportedEncodingException 
+     * @throws FileNotFoundException
+     * @throws IOException  
      */
     public static Conll toConll(InputStream is, String eosToken, Properties conllMap)
             throws UnsupportedEncodingException,
@@ -230,6 +233,7 @@ public class LineConverter {
      * @param   conllMap    <code>Map</code> containing connections between full
      *                      BTB tags and their respective CoNLL forms.
      * @return  {@link String} - CoNll encoded token
+     * @throws ArrayIndexOutOfBoundsException  
      */
     public static String lineTokenToConllToken(String line, int id, Properties conllMap)
             throws ArrayIndexOutOfBoundsException {
@@ -302,7 +306,8 @@ public class LineConverter {
     }
     
     /**
-     * @deprecated current system date
+     * @throws ArrayIndexOutOfBoundsException 
+     * @deprecated since v1.0
      */
     public static String toConllLine(String line, int id, Properties conllMap)
             throws ArrayIndexOutOfBoundsException {

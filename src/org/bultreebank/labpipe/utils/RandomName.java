@@ -18,11 +18,15 @@
 package org.bultreebank.labpipe.utils;
 
 /**
+ * <code>RandomName</code> generates random file names.
  *
  * @author Aleksandar Savkov
  */
 public class RandomName {
-
+    
+    /*
+     * Generates a random String of letters and numbers 10 signs long
+     */
     private static String makeRandomString() {
         
         String alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
@@ -36,6 +40,9 @@ public class RandomName {
         
     }
     
+    /*
+     * Generates a random number within the given limits
+     */
     private static int genRandomNumber(int low, int high) {
         int random = (int)(Math.random() * 100);
         if (random > low && random < high) 
@@ -44,11 +51,24 @@ public class RandomName {
             return genRandomNumber(low, high);
     }
     
+    /**
+     * Generates a random name (10 signs) with the suffix <code>.tmp</code>
+     * 
+     * @return  String  random file name
+     */
     public static String makeRandomName() {
         
         return makeRandomString() + ".tmp";
     }
     
+    /**
+     * Generates a random name (10 signs) with the provided prefix and suffix
+     * 
+     * @param   prefix  prefix to the random name
+     * @param   suffix  suffix to the random name
+     * 
+     * @return  String  random name with prefix and suffix
+     */
     public static String makeRandomName(String prefix, String suffix) {
         
         return prefix + makeRandomString() + suffix;

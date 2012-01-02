@@ -11,6 +11,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 /**
+ * Sends emails
  *
  * @author javapractices.com
  */
@@ -19,6 +20,11 @@ public final class Emailer {
     private static final Logger log = Logger.getLogger(Emailer.class.getName()); 
     private Properties OPTIONS;
     
+    /**
+     * Constructs a new object using parameters from a Properties object.
+     * 
+     * @param   options mailing server settings
+     */
     public Emailer(Properties options) {
         OPTIONS = options;
     }
@@ -34,6 +40,11 @@ public final class Emailer {
 
     /**
      * Send a single email.
+     * 
+     * @param   aFromEmailAddr  from email address
+     * @param   aToEmailAddr    to email address
+     * @param   aSubject        email subject
+     * @param   aBody           email body
      */
     public void sendEmail(
             String aFromEmailAddr, String aToEmailAddr,

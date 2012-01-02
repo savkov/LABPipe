@@ -30,6 +30,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * <code>EncodingConverter</code> converts between different encodings and facilitates 
+ * escaping Strings in UTF-8 to Latin-1.
  *
  * @author Aleksandar Savkov
  */
@@ -37,10 +39,20 @@ import java.util.regex.Pattern;
 public class EncodingConverter {
 
     private static final Logger log = Logger.getLogger(EncodingConverter.class.getName());
+    private static final Pattern UNICODE_ESCAPE_SEQUENCE = Pattern.compile("#utf([0-9A-F]+);");
+    
     private static String newName(String name) {
         return name.replaceAll(".(txt|xml)$", ".utf8.$1");
     }
 
+    /**
+     * Converts the <code>file</code> content from a given encoding to UTF-8.
+     * 
+     * @param   filePath    path to the input file
+     * @param   fromEnc     input encoding 
+     * 
+     * @return  String  - UTF-8 encoded
+     */
     public static String convertToUtf8(String filePath, String fromEnc) {
         try {
             File infile = new File(filePath);
@@ -64,8 +76,14 @@ public class EncodingConverter {
 
         return newName(filePath);
     }
-    private static final Pattern UNICODE_ESCAPE_SEQUENCE = Pattern.compile("#utf([0-9A-F]+);");
 
+    /**
+     * Unescapes Unicode String that is escaped using the method in {@link #escapeUnicode(java.lang.String) }
+     * 
+     * @param   s   escaped String
+     * 
+     * @return  String UTF-8 encoded
+     */
     public static String unescapeUnicode(String s) {
         if (s == null || s.equals("")) {
             return s;
@@ -79,6 +97,13 @@ public class EncodingConverter {
         return res;
     }
 
+    /**
+     * Escapes Unicode String using <code>#utf + character table integer value</code>
+     * 
+     * @param   s   Unicode String
+     * 
+     * @return  String escaped
+     */
     public static String escapeUnicode(String s) {
         StringBuilder escaped = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {

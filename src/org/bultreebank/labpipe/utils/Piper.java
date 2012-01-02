@@ -1,7 +1,11 @@
 package org.bultreebank.labpipe.utils;
 
 /**
- * @see http://blog.bensmann.com/piping-between-processes
+ * <code>Piper</code> pipes a number of processes in the way this is done in by 
+ * the | operator in a Linux shell. Note that in fact the static method {@link #pipe(java.lang.Process[]) }
+ * does the piping using objects of this class.
+ * 
+ * @see <a href="http://blog.bensmann.com/piping-between-processes">http://blog.bensmann.com/piping-between-processes</a>
  * @author Ralf Bensmann
  */
 public class Piper implements java.lang.Runnable {
@@ -9,11 +13,21 @@ public class Piper implements java.lang.Runnable {
     private java.io.InputStream input;
     private java.io.OutputStream output;
 
+    /**
+     * Constructs a <code>Runnable</code> object
+     * 
+     * @param   input   process <code>InputStream</code>
+     * @param   output  process <code>OutputStream</code>
+     * 
+     */
     public Piper(java.io.InputStream input, java.io.OutputStream output) {
         this.input = input;
         this.output = output;
     }
 
+    /**
+     * Runs the <code>Process</code>
+     */
     public void run() {
         try {
             // Create 512 bytes buffer
@@ -23,7 +37,6 @@ public class Piper implements java.lang.Runnable {
             while (read > -1) {
                 // Read bytes into buffer
                 read = input.read(b, 0, b.length);
-                //System.out.println("read: " + new String(b));
                 if (read > -1) {
                     // Write bytes to output
                     output.write(b, 0, read);
@@ -44,6 +57,14 @@ public class Piper implements java.lang.Runnable {
         }
     }
     
+    /**
+     * Pipes a list of <code>Process</code> objects together like a shell pipe.
+     * 
+     * @param   proc    list of processes
+     * 
+     * @return  InputStream - final output
+     * 
+     */
     public static java.io.InputStream pipe(java.lang.Process... proc) throws java.lang.InterruptedException {
         // Start Piper between all processes
         java.lang.Process p1;

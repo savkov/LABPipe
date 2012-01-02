@@ -57,6 +57,7 @@ public class Converter {
      * Creates a new object based on the provided configuration.
      * 
      * @param   options <code>LABPipe</code> configuration
+     * @throws IOException  
      */
     public Converter(Configuration options) throws IOException {
         OPTIONS = options;
@@ -73,6 +74,9 @@ public class Converter {
      * @param   os  converted data <code>OutputStream</code>
      * @param   inputType   input data type
      * @param   outputType  output data type
+     * @throws MissingContentException 
+     * @throws IncorrectInputException
+     * @throws IncorrectOutputException  
      * 
      */
     public void convert(InputStream is, OutputStream os, int inputType, int outputType) throws MissingContentException, IncorrectInputException, IncorrectOutputException {
@@ -165,6 +169,9 @@ public class Converter {
      * @param   outputType  output data type
      * 
      * @return  {@link Object} of the <code>outputType</code>
+     * @throws MissingContentException
+     * @throws IncorrectInputException
+     * @throws IncorrectOutputException  
      */
     public Object convert(Object input, int inputType, int outputType) throws MissingContentException, IncorrectInputException, IncorrectOutputException {
 
@@ -416,8 +423,6 @@ public class Converter {
      * 
      * @param   doc   CLaRK document
      * @param   eosToken    end of sentence token
-     * @param   iConllMap   <code>Map</code> containing connections between tags
-     * in CoNLL representation and heir original forms
      * 
      * @return {@link String} - Line encoded data
      */
@@ -445,8 +450,7 @@ public class Converter {
     /**
      * Converts CLaRK document object into Line encoded data.
      * 
-     * @param   conll   CLaRK document
-     * @param   eosToken    end of sentence token
+     * @param   doc   CLaRK document
      * @param   conllMap   <code>Map</code> containing connections between tags
      * in BTB form and their CoNLL representation.
      * 

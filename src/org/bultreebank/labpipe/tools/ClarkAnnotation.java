@@ -58,8 +58,11 @@ import org.bultreebank.labpipe.utils.ServiceConstants;
 
 
 /**
+ * <code>ClarkAnnotation</code> loads a <code>ClarkProcessor</code> and sets it 
+ * ready for data processing. This class requires a Multi-Query name to 
+ * initialize a processor.
  *
- * @author Aleksandar Simov & Aleksandar Savkov
+ * @author Aleksandar Savkov & Aleksandar Simov
  */
 public class ClarkAnnotation {
 
@@ -68,6 +71,15 @@ public class ClarkAnnotation {
     private Configuration OPTIONS;
     ClarkProcessor processor = null;
 
+    /**
+     * Creates a new object based on the LABPipe configuration and a 
+     * Multi-Query name. Note that the MQ has to be imported in the CLaRK 
+     * distribution listed in the configuration file.
+     * 
+     * @param   options LABPipe configuration
+     * @param   queryName   Multi-Query name
+     * @throws ClarkConfigurationException  
+     */
     public ClarkAnnotation(Configuration options, String queryName) throws ClarkConfigurationException {
 
         OPTIONS = options;
@@ -98,6 +110,12 @@ public class ClarkAnnotation {
         }
     }
 
+    /**
+     * @param confFile 
+     * @param queryName 
+     * @throws ClarkConfigurationException 
+     * @deprecated since v1.0
+     */
     public ClarkAnnotation(String confFile, String queryName) throws ClarkConfigurationException {
 
         CONF_FILE = confFile;
@@ -149,6 +167,15 @@ public class ClarkAnnotation {
         }
     }
 
+    /**
+     * Annotates text data using CLaRK.
+     * 
+     * @param   data    text
+     * 
+     * @return  String  - annotated data
+     * @throws ClarkConfigurationException
+     * @throws MissingContentException  
+     */
     public String annotateTextData(String data) throws ClarkConfigurationException, MissingContentException {
         if (processor == null) {
             throw new ClarkConfigurationException("CLaRK processor is not initialized!");
@@ -165,7 +192,7 @@ public class ClarkAnnotation {
     }
 
     /**
-     * @deprecated current system date
+     * @deprecated since v1.0
      */
     public String annotateTextData(String data, int matherialID, int courceID,
             String language) {
@@ -192,12 +219,29 @@ public class ClarkAnnotation {
 
     }
 
+    /**
+     * Uses CLaRK processor on XML document. Note that in the LABPipe context 
+     * this document has to abide the CLaRK document standard: root-&gt;s-&gt;tok
+     * 
+     * @param   doc XML document
+     * 
+     * @return  String  - CLaRK XML document
+     */
     public String processXmlData(Document doc) {
 
         return processXmlData(doc, "weblicht.dtd");
 
     }
 
+    /**
+     * Uses CLaRK processor on XML document. Note that in the LABPipe context 
+     * this document has to abide the CLaRK document standard: root-&gt;s-&gt;tok
+     * 
+     * @param   doc XML document
+     * @param   dtd specific DTD
+     * 
+     * @return  String  - CLaRK XML document
+     */
     public String processXmlData(Document doc, String dtd) {
         if (processor == null) {
             reportError(500, "CLaRK configuration failure");
@@ -218,10 +262,31 @@ public class ClarkAnnotation {
         return resultString;
     }
 
+    /**
+     * Uses CLaRK processor on XML document. Note that in the LABPipe context 
+     * this document has to abide the CLaRK document standard: root-&gt;s-&gt;tok
+     * 
+     * @param   doc XML document
+     * 
+     * @return  Document  - CLaRK XML document
+     * @throws ClarkConfigurationException
+     * @throws MissingContentException  
+     */
     public Document processXmlDocument(Document doc) throws ClarkConfigurationException, MissingContentException {
         return processXmlDocument(doc, "laska.dtd");
     }
 
+    /**
+     * Uses CLaRK processor on XML document. Note that in the LABPipe context 
+     * this document has to abide the CLaRK document standard: root-&gt;s-&gt;tok
+     * 
+     * @param   doc XML document
+     * @param   dtd specific DTD
+     * 
+     * @return  Document  - CLaRK XML document
+     * @throws ClarkConfigurationException
+     * @throws MissingContentException  
+     */
     public Document processXmlDocument(Document doc, String dtd) throws ClarkConfigurationException, MissingContentException {
         if (processor == null) {
             throw new ClarkConfigurationException("CLaRK processor is not initialized!");
@@ -240,6 +305,16 @@ public class ClarkAnnotation {
         return result;
     }
 
+    /**
+     * Processes a WebLicht document in CLaRK (the data is converted beforehand).
+     * 
+     * @param   is  input stream
+     * @param   os  output stream
+     * @throws ParserConfigurationException 
+     * @throws ClarkConfigurationException
+     * @throws JAXBException
+     * @throws MissingContentException  
+     */
     public void processWebLichtStream(InputStream is, OutputStream os) throws ParserConfigurationException, JAXBException, MissingContentException, ClarkConfigurationException {
 
         JAXBContext jc = JAXBContext.newInstance("de.dspin.data");
@@ -254,10 +329,31 @@ public class ClarkAnnotation {
 
     }
 
+    /**
+     * Processes a WebLicht document in CLaRK (the data is converted 
+     * beforehand). The new data is imported in the same WebLicht object.
+     * 
+     * @param   doc WebLicht document
+     * 
+     * @return  {@link WebLicht}
+     * @throws MissingContentException
+     * @throws ClarkConfigurationException  
+     */
     public WebLicht processWebLicht(WebLicht doc) throws MissingContentException, ClarkConfigurationException {
         return processWebLicht(doc, null);
     }
 
+    /**
+     * Processes a WebLicht document in CLaRK (the data is converted 
+     * beforehand). The new data is imported in the same WebLicht object.
+     * 
+     * @param   doc WebLicht document
+     * @param   escapes escape sequences (not implemented yet)
+     * 
+     * @return  {@link WebLicht}
+     * @throws MissingContentException 
+     * @throws ClarkConfigurationException  
+     */
     public WebLicht processWebLicht(WebLicht doc, HashMap escapes) throws MissingContentException, ClarkConfigurationException {
 
         String dtd = OPTIONS.getProperty("clarkDtd");
@@ -270,7 +366,7 @@ public class ClarkAnnotation {
 
     }
 
-    public String decode(String in) {
+    private String decode(String in) {
         if (in == null) {
             return null;
         }
@@ -282,12 +378,22 @@ public class ClarkAnnotation {
         }
     }
 
+    /**
+     * @param statusCode 
+     * @param message 
+     * @deprecated  @version
+     */
     public static void reportError(int statusCode, String message) {
 //        Response error = Response.status(statusCode).build();
 //        error.getMetadata().add("Error", message);
 //        throw new WebApplicationException(error);
     }
 
+    /**
+     * Changes the MQ of the processor by essentially building a new processor 
+     * to replace the one in this object.
+     * @param queryName 
+     */
     public void changeMultiQuery(String queryName) {
 
         String query = null;

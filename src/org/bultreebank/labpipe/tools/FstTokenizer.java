@@ -38,6 +38,8 @@ import org.bultreebank.labpipe.utils.Piper;
 import org.bultreebank.labpipe.utils.ServiceConstants;
 
 /**
+ * <code>FstTokenizer</code> is a wrapper class that performs tokenization using 
+ * piped finite state transducers.
  *
  * @author Aleksandar Savkov
  */
@@ -49,6 +51,11 @@ public class FstTokenizer extends Tokenizer {
     private String EOS_TOKEN = null;
     private static final Logger logger = Logger.getLogger(FstTokenizer.class.getName());
 
+    /**
+     * Creates a new object based on the LABPipe configuration
+     * 
+     * @param conf
+     */
     public FstTokenizer(Configuration conf) {
         FST_COMMAND = conf.getSfstCommand();
         TRANSDUCER_HOME = conf.getTransducerHome();
@@ -56,6 +63,14 @@ public class FstTokenizer extends Tokenizer {
         setTransducerCommands(conf.getProperty(Configuration.TRANSDUCER_LIST));
     }
 
+    /**
+     * Creates a new object using direct configuration setting
+     * 
+     * @param commandsList  fst commands
+     * @param transducerHome    path to transducer files
+     * @param sfstCommand   path to SFST command
+     * @param eosToken  end of sentence token
+     */
     public FstTokenizer(ArrayList<String[]> commandsList, String transducerHome, String sfstCommand, String eosToken) {
         COMMANDS = commandsList;
         TRANSDUCER_HOME = transducerHome;
@@ -63,6 +78,12 @@ public class FstTokenizer extends Tokenizer {
         EOS_TOKEN = eosToken;
     }
 
+    /**
+     * Sets transducer commands.
+     * 
+     * @param transducerStr String containing list of transducer commands 
+     *                      each separated by a ; sign
+     */
     public final void setTransducerCommands(String transducerStr) {
         ArrayList<String> transducerList = new ArrayList(Arrays.asList(transducerStr.split(";")));
         COMMANDS = new ArrayList();
@@ -97,6 +118,13 @@ public class FstTokenizer extends Tokenizer {
         
     }
     
+    /**
+     * Tokenizes the text from <code>is</code>
+     * 
+     * @param is    input stream containing text
+     * @return  String  Line encoded tokenized data
+     * @throws InterruptedException
+     */
     public String tokenize(InputStream is) throws InterruptedException {
         try {
             ProcessBuilder pb = new ProcessBuilder();

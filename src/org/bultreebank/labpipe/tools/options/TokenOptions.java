@@ -19,7 +19,7 @@ package org.bultreebank.labpipe.tools.options;
 
 /**
  *
- * @deprecated current system date
+ * @deprecated since v1.0
  * @author Aleksandar Savkov
  */
 public class TokenOptions {// depricated

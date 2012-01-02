@@ -41,7 +41,7 @@ import org.bultreebank.labpipe.utils.ServiceConstants;
 /**
  *
  * DEPRICATED
- * @deprecated current system date
+ * @deprecated since v1.0
  * @author Aleksandar Savkov
  */
 public class RegExTokenizer extends Tokenizer {
@@ -52,12 +52,23 @@ public class RegExTokenizer extends Tokenizer {
     private Pattern TOKEN_PATTERN;
     private static final Logger logger = Logger.getLogger(RegExTokenizer.class.getName());
 
+    /**
+     * 
+     * @param options
+     * @throws IOException
+     */
     public RegExTokenizer(Configuration options) throws IOException {
         OPTIONS = options;
         RED = new RegExDictionary(OPTIONS);
         setTokenPattern();
     }
 
+    /**
+     * 
+     * @param options
+     * @param dictPath
+     * @throws IOException
+     */
     public RegExTokenizer(Configuration options, String dictPath) throws IOException {
         OPTIONS = options;
         RED = new RegExDictionary(OPTIONS);

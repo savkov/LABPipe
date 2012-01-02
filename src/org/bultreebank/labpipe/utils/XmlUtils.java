@@ -39,6 +39,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
+ * <code>XmlUtils</code> contains some useful static methods utilizing 
+ * operations with and on DOM XML objects.
  *
  * @author Aleksandar Savkov
  */
@@ -46,6 +48,12 @@ public class XmlUtils {
 
     private static final Logger logger = Logger.getLogger(XmlUtils.class.getName());
 
+    /**
+     * Prints the <code>Document</code> as a <code>String</code> into the <code>OutputStream</code>.
+     * 
+     * @param   doc XML DOM object
+     * @param   out <code>OutputStream</code>
+     */
     public static void print(Document doc, OutputStream out) {
 
         TransformerFactory tfactory = TransformerFactory.newInstance();
@@ -67,6 +75,13 @@ public class XmlUtils {
         }
     }
 
+    /**
+     * Prints the <code>Document</code> into a <code>String</code> object.
+     * 
+     * @param   doc XML DOM object.
+     * 
+     * @return  String
+     */
     public static String printToString(Document doc) throws UnsupportedEncodingException {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
@@ -75,13 +90,19 @@ public class XmlUtils {
 
     }
 
-    public static boolean xmlDiff(String file1, String file2) {
+    /**
+     * Compares two XML files for differences.
+     * 
+     * @param   testFilePath   path to test XML file
+     * @param   goldFilePath   path to gold XML file
+     */
+    public static boolean xmlDiff(String testFilePath, String goldFilePath) {
         try {
 
-            System.out.print("Test file: " + file1 + "\nGold file: " + file2);
+            System.out.print("Test file: " + testFilePath + "\nGold file: " + goldFilePath);
 
-            Document doc1 = ClarkDocumentBuilder.buildClarkDocument(new FileInputStream(file1));
-            Document doc2 = ClarkDocumentBuilder.buildClarkDocument(new FileInputStream(file2));
+            Document doc1 = ClarkDocumentBuilder.buildClarkDocument(new FileInputStream(testFilePath));
+            Document doc2 = ClarkDocumentBuilder.buildClarkDocument(new FileInputStream(goldFilePath));
             Document diff = ClarkDocumentBuilder.buildClarkDocument();
 
             Element diffs = diff.createElement("diffs");
@@ -109,6 +130,9 @@ public class XmlUtils {
 
     }
 
+    /*
+     * Compares two XML nodes
+     */
     @SuppressWarnings("LoggerStringConcat")
     private static boolean diffNode(Node motherNode1, Node motherNode2, Document log) {
 
@@ -170,6 +194,17 @@ public class XmlUtils {
         return diffBol;
     }
 
+    /**
+     * Compares the attributes of two XML <code>Node</code> objects. This method
+     * returns <code>true</code> if all attribute name-value pairs match 
+     * disregarding their order of placement.
+     * 
+     * @param   n1    first <code>Node</code>
+     * @param   n2    second <code>Node</code>
+     * 
+     * @return  boolean
+     * 
+     */
     public static boolean diffAttributes(Node n1, Node n2) {
         NamedNodeMap n1Atts = n1.getAttributes();
         NamedNodeMap n2Atts = n2.getAttributes();
@@ -188,6 +223,13 @@ public class XmlUtils {
         return true;
     }
 
+    /**
+     * Checks if a <code>Node</code> has any descendant <code>Element</code> nodes.
+     * 
+     * @param   n   <code>Node</code> to be examined
+     * 
+     * @return  boolean
+     */
     public static boolean containsElements(Node n) {
         NodeList children = n.getChildNodes();
 

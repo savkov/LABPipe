@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 /**
  *
  * @author Aleksandar Savkov
- * @deprecated current system date
+ * @deprecated since v1.0
  */
 public class WorkPathBuilder {
 

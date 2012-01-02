@@ -53,6 +53,8 @@ import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
 
 /**
+ * <code>MaltParserWrapper</code> uses the MaltParser API to facilitate data 
+ * parsing in LABPipe.
  *
  * @author Aleksandar Savkov
  */
@@ -63,6 +65,12 @@ public class MaltParserWrapper {
     private MaltParserService SERVICE = null;
     private static final Logger logger = Logger.getLogger(MaltParserWrapper.class.getName());
 
+    /**
+     * Creates a new object based on the LABPipe configuration
+     * 
+     * @param   options LABPipe configuration
+     * @throws MaltChainedException  
+     */
     public MaltParserWrapper(Configuration options) throws MaltChainedException {
 
         OPTIONS = options;
@@ -122,6 +130,14 @@ public class MaltParserWrapper {
 
     }
 
+    /**
+     * Parses a WebLicht stream and outputs it in another stream
+     * 
+     * @param   is  input stream
+     * @param   os  output stream
+     * @throws JAXBException
+     * @throws MaltChainedException  
+     */
     public void parseWebLichtStream(InputStream is, OutputStream os) throws JAXBException, MaltChainedException {
         
         JAXBContext jc = JAXBContext.newInstance("de.dspin.data");
@@ -136,6 +152,14 @@ public class MaltParserWrapper {
         
     }
 
+    /**
+     * Parses a {@link Conll} sentence
+     * 
+     * @param   sentence    <code>Conll</code> sentence (ArrayList)
+     * 
+     * @return  ArrayList&lt;String&gt; - parsed Conll sentence
+     * @throws MaltChainedException  
+     */
     public ArrayList<String> parseSentence(ArrayList<String> sentence) throws MaltChainedException {
 
         ArrayList<String> parsedSentence = null;
@@ -147,6 +171,14 @@ public class MaltParserWrapper {
 
     }
     
+    /**
+     * Parses a {@link Conll} document
+     * 
+     * @param   conll   Conll document
+     * 
+     * @return  {@link Conll}
+     * @throws MaltChainedException  
+     */
     public Conll parseConll(Conll conll) throws MaltChainedException {
         Conll parsedConll = new Conll();
         for (ArrayList<String> sentence : conll) {
@@ -155,12 +187,29 @@ public class MaltParserWrapper {
         return parsedConll;
     }
     
+    /**
+     * Parses a CoNLL string
+     * 
+     * @param   conll   CoNLL encoded string
+     * 
+     * @return  String  - CoNLL encoded string
+     * @throws MaltChainedException 
+     * @throws IOException
+     * @throws UnsupportedEncodingException  
+     */
     public String parseString(String conll) throws MaltChainedException, UnsupportedEncodingException, IOException {
         
         return parseConll(new Conll(conll)).toString();
         
     }
 
+    /**
+     * Parses CoNLL file
+     * 
+     * @param   inFile  input CoNLL file
+     * @param   outFile output CoNLL file
+     * @throws MaltChainedException  
+     */
     public void parseFile(String inFile, String outFile) throws MaltChainedException {
 
         try {
@@ -190,6 +239,12 @@ public class MaltParserWrapper {
 
     }
 
+    /**
+     * Parses a WebLicht document. It adds <code>depparsing</code> elements to 
+     * the same document.
+     * 
+     * @param   doc {@link WebLicht} document
+     */
     public void parseWebLicht(WebLicht doc) {
 
         TextCorpus tc = doc.getTextCorpus();
@@ -248,6 +303,11 @@ public class MaltParserWrapper {
 
     }
 
+    /**
+     * @param inFile 
+     * @param outFile 
+     * @deprecated since v1.0
+     */
     public static void parseFileStatic(String inFile, String outFile) {
 
 

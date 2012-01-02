@@ -56,8 +56,6 @@ public class Main {
 
     public static void main(String[] args) throws IOException, JAXBException, ParserConfigurationException, SAXException, MaltChainedException, InterruptedException {
         
-        //TODO Write JavaDoc
-        
         System.out.println(CommandLineUtils.COPYRIGHT_MESSEGE);
         
         if (!CommandLineUtils.validateParameters(args)) {

@@ -44,15 +44,38 @@ import org.bultreebank.labpipe.utils.ClassMap;
 import org.bultreebank.labpipe.utils.ServiceConstants;
 
 /**
+ * <code>Tokenizer</code> is a general purpose tokenizer class
  *
  * @author Aleksandar Savkov
  */
 public abstract class Tokenizer {
     
     private HashMap ESCAPES = null;
+    /**
+     * Tokenizes String text into Line encoded data
+     * 
+     * @param   text    text to be tokenized
+     * 
+     * @return  String  - Line encoded data
+     */
     public abstract String tokenize(String text) throws IOException, InterruptedException;
+    
+    /**
+     * Tokenizes a WebLicht file containing only <code>text</code> element and produces a {@link WebLicht} object.
+     * 
+     * @param   file    WebLicht file
+     * 
+     * @return  {@link WebLicht}    - tokenized object
+     */
     public abstract WebLicht tokenize(File file) throws IOException, InterruptedException, FileNotFoundException, IncorrectInputException;
     
+    /**
+     * Tokenizes a WebLicht object
+     * 
+     * @param   doc WebLicht object
+     * 
+     * @return  {@link WebLicht}
+     */
     public WebLicht tokenize(WebLicht doc) throws IncorrectInputException, IOException, InterruptedException {
         List tcList = doc.getTextCorpus().getTextOrTokensOrSentences();
         ClassMap cm = new ClassMap(tcList);
@@ -138,6 +161,12 @@ public abstract class Tokenizer {
         
     }
     
+    /**
+     * Tokenizes <code>InputStream</code> of WebLicht document and prints the new WebLicht document into the <code>OutputStream</code>
+     * 
+     * @param   is  WebLicht <code>InputStream</code>
+     * @param   os  WebLicht <code>OutputStream</code>
+     */
     public WebLicht tokenize(InputStream is, OutputStream os) throws JAXBException, IncorrectInputException, InterruptedException, IOException {
         
         JAXBContext jc = JAXBContext.newInstance("de.dspin.data");
@@ -153,6 +182,11 @@ public abstract class Tokenizer {
         
     }
     
+    /**
+     * Retrieves the escapes <code>Map</code>
+     * 
+     * @return  HashMap - escapes
+     */
     public HashMap getEscapes() {
         return ESCAPES;
     }

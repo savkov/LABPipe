@@ -55,14 +55,30 @@ import org.bultreebank.labpipe.utils.Misc;
 import org.bultreebank.labpipe.utils.ServiceConstants;
 
 /**
+ * <code>SVMTagger</code> POS-tags text data using an external HTTP server 
+ * instance of the SVMTool tagger.
  *
  * @author Aleksandar Savkov
  */
 public class SVMTagger {
 
+    /**
+     * 
+     */
     public static final Logger logger = Logger.getLogger(SVMTagger.class.getName());
 
-    public static String tagLinesString(String lines, String eosToken, Properties options) throws SVMTConnectionExceptoin, IncorrectInputException, MissingContentException {
+    /**
+     * Tags Line encoded String
+     * 
+     * @param   lines   Line encoded data
+     * @param   options LABPipe configuration
+     * 
+     * @return  String  - Line encoded tagged data
+     * @throws SVMTConnectionExceptoin
+     * @throws IncorrectInputException
+     * @throws MissingContentException  
+     */
+    public static String tagLinesString(String lines, Configuration options) throws SVMTConnectionExceptoin, IncorrectInputException, MissingContentException {
         BufferedReader br = null;
         try {
             StringBuilder sb = new StringBuilder();
@@ -72,7 +88,7 @@ public class SVMTagger {
             String line = "";
             while ((line = br.readLine()) != null) {
 
-                if (line.startsWith(eosToken)) {
+                if (line.startsWith(options.getProperty(Configuration.EOS_TOKEN))) {
                     sb.append(Misc.joinColumns(sentence.toArray((String[]) new String[0]), SVMTagger.tagList(sentence, options), " "));
                     sb.append(options.getProperty(Configuration.EOS_TOKEN));
                     sb.append("\n");
@@ -109,7 +125,21 @@ public class SVMTagger {
         return null;
     }
 
-    public static void tagWebLichtStream(InputStream is, OutputStream os, Properties options) throws JAXBException, IncorrectInputException, SVMTConnectionExceptoin, UnsupportedEncodingException, IOException, MissingContentException {
+    /**
+     * Tags WebLicht stream and outputs it in another stream.
+     * 
+     * @param   is  input WebLicht
+     * @param   os  output WebLicht
+     * @param   options LABPipe configuration
+     * @throws JAXBException 
+     * @throws UnsupportedEncodingException
+     * @throws IncorrectInputException
+     * @throws SVMTConnectionExceptoin
+     * @throws IOException
+     * @throws MissingContentException  
+     * 
+     */
+    public static void tagWebLichtStream(InputStream is, OutputStream os, Configuration options) throws JAXBException, IncorrectInputException, SVMTConnectionExceptoin, UnsupportedEncodingException, IOException, MissingContentException {
 
         WebLicht doc = new WebLicht(is);
         tagWebLicht(doc, options);
@@ -117,6 +147,17 @@ public class SVMTagger {
 
     }
 
+    /**
+     * Tags WebLicht object and creates the <code>tokens</code> element in the same document.
+     * 
+     * @param   doc WebLicht document
+     * @param   options LABPipe configuration
+     * @throws IncorrectInputException 
+     * @throws MissingContentException
+     * @throws SVMTConnectionExceptoin 
+     * @throws UnsupportedEncodingException 
+     * @throws IOException  
+     */
     public static void tagWebLicht(WebLicht doc, Properties options) throws IncorrectInputException, SVMTConnectionExceptoin, UnsupportedEncodingException, IOException, MissingContentException {
 
         TextCorpus tc = doc.getTextCorpus();
@@ -173,6 +214,14 @@ public class SVMTagger {
 
     }
 
+    /**
+     * Tags a list of strings (ordered usually as a sentence).
+     * 
+     * @param   input   list of words
+     * @param   options LABPipe configuration
+     * 
+     * @return  String[]    - list of tags in the original word order
+     */
     private static String[] tagList(List<String> input, Properties options)
             throws SVMTConnectionExceptoin, UnsupportedEncodingException, IOException, MissingContentException {
         HttpURLConnection connection = null;

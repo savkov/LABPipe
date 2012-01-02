@@ -60,6 +60,9 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.ContentHandler;
 
 /**
+ * <code>WebLicht</code> constitutes the a data unit encoded using the D-Spin 
+ * WebLicht v.0.3 XML standard format. This class extends {@link DSpin} adding 
+ * some functionality related to importing and exporting data.
  *
  * @author Aleksandar Savkov
  */
@@ -67,21 +70,48 @@ public class WebLicht extends DSpin {
 
     private static final Logger logger = Logger.getLogger(WebLicht.class.getName());
 
+    /**
+     * Creates an empty <code>WebLicht</code> object.
+     * 
+     */
     public WebLicht() {
     }
 
+    /**
+     * Creates a <code>WebLicht</code> object from a <code>DSpin</code> object.
+     * 
+     * @param   doc DSpin document
+     */
     public WebLicht(DSpin doc) {
         importDSpin(doc);
     }
 
+    /**
+     * Unmarshalls a XML document read from the <code>InputStream</code> and 
+     * creates an object based on it.
+     * 
+     * @param   is  <code>InputStream</code> containing a DSpin WebLicht XML document.
+     * 
+     */
     public WebLicht(InputStream is) {
         unmarshall(is);
     }
 
+    /**
+     * Unmarshalls a XML document from <code>dspin</code> and 
+     * creates an object based on it.
+     * 
+     * @param   dspin   <code>String</code> containing a DSpin WebLicht XML document.
+     */
     public WebLicht(String dspin) {
         unmarshall(dspin);
     }
 
+    /**
+     * Constructs A WebLicht object based on a CLaRK document.
+     * 
+     * @param   clarkDoc    CLaRK document
+     */
     public WebLicht(Document clarkDoc) {
 
         ObjectFactory factory = new ObjectFactory();
@@ -217,6 +247,11 @@ public class WebLicht extends DSpin {
 
     }
 
+    /**
+     * Imports a DSpin object data into this object.
+     * 
+     * @param   doc DSpin object
+     */
     public final void importDSpin(DSpin doc) {
         this.lexicon = doc.getLexicon();
         this.metaData = doc.getMetaData();
@@ -224,6 +259,11 @@ public class WebLicht extends DSpin {
         this.version = doc.getVersion();
     }
 
+    /**
+     * Unmarshalls <code>InputStream</code> into a <code>DSpin</code> object and
+     * then imports its content into this object.
+     * @param is 
+     */
     public final void unmarshall(InputStream is) {
         try {
             JAXBContext context = JAXBContext.newInstance("de.dspin.data");
@@ -236,6 +276,11 @@ public class WebLicht extends DSpin {
 
     }
 
+    /**
+     * Unmarshalls a <code>String</code> into a <code>DSpin</code> object and
+     * then imports its content into this object.
+     * @param dspin 
+     */
     public final void unmarshall(String dspin) {
 
         try {
@@ -249,21 +294,32 @@ public class WebLicht extends DSpin {
         }
 
     }
-
+    
+    /**
+     * Converts this document's XML representation into <code>String</code>.
+     * 
+     * @return  String - this document's XML representation
+     */
     @Override
     public String toString() {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-        toText(baos);
+        this.exportAsXML(baos);
         try {
             return baos.toString(ServiceConstants.PIPE_CHARACTER_ENCODING);
         } catch (UnsupportedEncodingException ex) {
-            logger.log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, ServiceConstants.EXCEPTION_UNSUPPORTED_ENCODING, ex);
             return null;
         }
 
     }
 
+    /**
+     * Prints this object's text representation (the <code>text</code> element
+     * from the underlying <code>DSpin</code> document) into the <code>OutputStream</code>.
+     * 
+     * @param   os  <code>OutputStream</code> to receive the text part of this document.
+     */
     public void toText(OutputStream os) {
         try {
             TextCorpus tc = this.getTextCorpus();
@@ -293,6 +349,11 @@ public class WebLicht extends DSpin {
 
     }
 
+    /**
+     * Exports this object as a DOM <code>Node</code>.
+     * 
+     * @param   out DOM <code>Node</code> object receiving the data
+     */
     public void exportAsXML(Node out) {
         try {
             JAXBContext jc = JAXBContext.newInstance("de.dspin.data");
@@ -303,7 +364,12 @@ public class WebLicht extends DSpin {
             logger.log(Level.SEVERE, "Problem with exporting to XML.", ex);
         }
     }
-
+    
+   /**
+     * Writes this object into a <code>XMLStreamWriter</code>.
+     * 
+     * @param   out DOM <code>XMLStreamWriter</code> object receiving the data
+     */
     public void exportAsXML(XMLStreamWriter out) {
         try {
             JAXBContext jc = JAXBContext.newInstance("de.dspin.data");
@@ -315,6 +381,11 @@ public class WebLicht extends DSpin {
         }
     }
 
+    /**
+     * Writes this object into a <code>XMLEventWriter</code>.
+     * 
+     * @param   out <code>XMLEventWriter</code> object receiving the data
+     */
     public void exportAsXML(XMLEventWriter out) {
         try {
             JAXBContext jc = JAXBContext.newInstance("de.dspin.data");
@@ -326,6 +397,11 @@ public class WebLicht extends DSpin {
         }
     }
 
+    /**
+     * Relays this object to a <code>ContentHandler</code>.
+     * 
+     * @param   out <code>ContentHandler</code> object receiving the data
+     */
     public void exportAsXML(ContentHandler out) {
         try {
             JAXBContext jc = JAXBContext.newInstance("de.dspin.data");
@@ -337,6 +413,11 @@ public class WebLicht extends DSpin {
         }
     }
 
+    /**
+     * Writes this object into a <code>File</code>.
+     * 
+     * @param   out <code>File</code> object receiving the data
+     */
     public void exportAsXML(File out) {
         try {
             JAXBContext jc = JAXBContext.newInstance("de.dspin.data");
@@ -348,6 +429,11 @@ public class WebLicht extends DSpin {
         }
     }
 
+    /**
+     * Writes this object into a <code>Writer</code>.
+     * 
+     * @param   out <code>Writer</code> object receiving the data
+     */
     public void exportAsXML(Writer out) {
         try {
             JAXBContext jc = JAXBContext.newInstance("de.dspin.data");
@@ -359,6 +445,11 @@ public class WebLicht extends DSpin {
         }
     }
 
+    /**
+     * Writes this object into a <code>OutputStream</code>.
+     * 
+     * @param   out <code>OutputStream</code> object receiving the data
+     */
     public void exportAsXML(OutputStream out) {
         try {
             JAXBContext jc = JAXBContext.newInstance("de.dspin.data");
@@ -370,6 +461,15 @@ public class WebLicht extends DSpin {
         }
     }
 
+    /**
+     * Converts this object to a {@link Conll} object.
+     * 
+     * @param   conllMap    <code>Map</code> of POS tag forms linking BTB 
+     *                      original forms to the CoNLL appropriate ones.
+     * @return  {@link Conll}
+     * @throws MissingContentException  
+     * 
+     */
     public Conll toConll(Properties conllMap) throws MissingContentException {
 
         ClassMap cm = new ClassMap(this.getTextCorpus().getTextOrTokensOrSentences());
@@ -392,7 +492,13 @@ public class WebLicht extends DSpin {
         return conllArray;
     }
 
-    public void toTextDataDocument() {
+    /**
+     * Exports this objects <code>text</code> element into a XML document 
+     * containing only text.
+     * 
+     * @return Document - CLaRK Text document
+     */
+    public Document toTextDataDocument() {
 
         Document textDoc = ClarkDocumentBuilder.buildClarkDocument();
 
@@ -406,21 +512,31 @@ public class WebLicht extends DSpin {
         Element textdata = textDoc.createElement("textdata");
         textdata.setTextContent(text);
         textDoc.appendChild(textdata);
+        
+        return textDoc;
 
     }
 
-    public void toDomXml(DSpin doc, Marshaller m, Document result) {
-        try {
-            m.marshal(doc, result);
-        } catch (JAXBException ex) {
-            logger.log(Level.SEVERE, ServiceConstants.EXCEPTION_JAXB, ex);
-        }
-    }
-
+    /**
+     * Converts this object to CLaRK data document
+     * 
+     * @return Document - CLaRK data document
+     * @throws MissingContentException  
+     */
     public Document toClark() throws MissingContentException {
         return toClark(null);
     }
 
+    /**
+     * Converts this object to CLaRK data document
+     * 
+     * @param   escapes a <code>Map</code> containing links between 
+     *                  <code>Token</code> elements and escaped sequences 
+     *                  (This is not yet implement in the new setting of LABPipe)
+     * 
+     * @return Document - CLaRK data document
+     * @throws MissingContentException  
+     */
     public Document toClark(HashMap<Token, List<String>> escapes) throws MissingContentException {
 
         Document clarkDoc = ClarkDocumentBuilder.buildClarkDocument();
@@ -490,6 +606,16 @@ public class WebLicht extends DSpin {
 
     }
 
+    /**
+     * Converts this object into a Line encoded <code>String</code> 
+     * representation and prints it into the <code>OutputStream</code>.
+     * 
+     * @param   os  <code>OutputStream</code> receiving the Line encoded data
+     * @param   eosToken    end of sentence token
+     * @param   gaze    <code>boolean</code> flag indicating Gaze representation
+     * @throws MissingContentException  
+     * 
+     */
     public void toLines(OutputStream os, String eosToken, boolean gaze) throws MissingContentException {
 
 
