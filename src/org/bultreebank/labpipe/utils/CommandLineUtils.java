@@ -196,10 +196,10 @@ public class CommandLineUtils {
     /**
      * Copyright message
      */
-    public static final String COPYRIGHT_MESSEGE = "LABPipe  Copyright (C) 2011 Aleksandar Savkov\n"
-            + "    This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\n"
-            + "    This is free software, and you are welcome to redistribute it\n"
-            + "    under certain conditions; type `show c' for details.";
+    public static final String COPYRIGHT_MESSEGE = "\nLABPipe  Copyright (C) 2011 Aleksandar Savkov\n"
+            + "This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\n"
+            + "This is free software, and you are welcome to redistribute it\n"
+            + "under certain conditions; type `show c' for details.\n";
     
     /**
      * Returns a <code>String</code> array with all files contained in a directory.

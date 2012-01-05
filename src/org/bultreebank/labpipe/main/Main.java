@@ -56,6 +56,11 @@ public class Main {
 
     public static void main(String[] args) throws IOException, JAXBException, ParserConfigurationException, SAXException, MaltChainedException, InterruptedException {
         
+        if (args.length == 0) {
+            System.out.println(CommandLineUtils.HELP_MESSAGE);
+            return;
+        }
+        
         System.out.println(CommandLineUtils.COPYRIGHT_MESSEGE);
         
         if (!CommandLineUtils.validateParameters(args)) {
@@ -76,7 +81,7 @@ public class Main {
         conf.loadConfigFileFromFS(optionsPath, Configuration.XML);
 
         List<Integer> commandsList = (parameterMap.containsKey(CommandLineUtils.PIPE_COMMANDS_PAR)) ? CommandLineUtils.makeCommandsList(parameterMap.get(CommandLineUtils.PIPE_COMMANDS_PAR)) : CommandLineUtils.makeCommandsList(conf.getProperty(Configuration.DEFAULT_PIPE));
-        String workingDir = (parameterMap.containsKey(CommandLineUtils.WORKING_DIR_PAR)) ? parameterMap.get(CommandLineUtils.WORKING_DIR_PAR) : new File(".").getCanonicalPath();
+        String workingDir = (parameterMap.containsKey(CommandLineUtils.WORKING_DIR_PAR)) ? parameterMap.get(CommandLineUtils.WORKING_DIR_PAR) : new File(".").getCanonicalPath() + ServiceConstants.SYSTEM_SEPARATOR;
         String outputDir = (parameterMap.containsKey(CommandLineUtils.OUTPUT_DIR_PAR)) ? parameterMap.get(CommandLineUtils.OUTPUT_DIR_PAR) : null;
 
         ArrayList<Integer> pipeCommands = new ArrayList();
@@ -132,6 +137,8 @@ public class Main {
                     ? input.getAbsolutePath() : workingDir + input.getName();
             String outputPath = (outputFiles[i].contains(ServiceConstants.SYSTEM_SEPARATOR))
                     ? output.getAbsolutePath() : workingDir + output.getName();
+//            String inputPath = input.getAbsolutePath();
+//            String outputPath = output.getAbsolutePath();
 
             InputStream is = null;
             OutputStream os = null;
