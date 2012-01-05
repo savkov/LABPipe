@@ -316,7 +316,6 @@ public class CommandLineUtils {
      */
     public static boolean validateParameters(String[] args) {
 
-        System.out.println(args.length);
         if (args.length == 0) {
             System.out.println(HELP_MESSAGE);
             return false;
@@ -328,7 +327,6 @@ public class CommandLineUtils {
         }
 
         for (int i = 0; i < args.length; i++) {
-            System.out.println();
             if (!PARAMETERS.contains(args[i])) {
                 throwCommandLineError(ERROR_INVALID_PARAMETER, args[i]);
             }
