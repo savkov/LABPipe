@@ -2,6 +2,9 @@
  * LABPipe - Natural Language Processing Pipeline for Bulgarian
  * Copyright (C) 2011 Institute for Information and Communication Technologies
  * 
+ * The development of this program was funded by the EuroMatrixPlus Project as 
+ * part of the Seventh Framework Program of the European Commission.
+ * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -17,18 +20,12 @@
  */
 package org.bultreebank.labpipe.converters;
 
-import java.util.logging.Level;
-import org.bultreebank.labpipe.data.Conll;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bultreebank.labpipe.data.ClarkDocumentBuilder;
+import org.bultreebank.labpipe.data.Conll;
 import org.bultreebank.labpipe.data.WebLicht;
 import org.bultreebank.labpipe.exceptions.IncorrectInputException;
 import org.bultreebank.labpipe.exceptions.IncorrectOutputException;
