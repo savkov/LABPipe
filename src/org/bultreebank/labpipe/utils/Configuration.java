@@ -1,6 +1,6 @@
 /*
  * LABPipe - Natural Language Processing Pipeline for Bulgarian
- * Copyright (C) 2011  Aleksandar Savkov
+ * Copyright (C) 2011 Institute for Information and Communication Technologies
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -863,7 +863,7 @@ public class Configuration extends Properties {
         if (DIR_MALT_WORKING_DIR_PATH == null) {
             throw new NullPointerException("Missing 'maltWorkingDir' entry in 'conf.xml'.");
         }
-        return DIR_MALT_WORKING_DIR_PATH;
+        return DIR_MALT_WORKING_DIR_PATH.replaceAll(" ", "\\\\ ");
     }
 
     /**

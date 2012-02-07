@@ -1,6 +1,6 @@
 /*
  * LABPipe - Natural Language Processing Pipeline for Bulgarian
- * Copyright (C) 2011  Aleksandar Savkov
+ * Copyright (C) 2011 Institute for Information and Communication Technologies
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
