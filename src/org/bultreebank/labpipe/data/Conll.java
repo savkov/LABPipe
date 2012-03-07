@@ -273,26 +273,35 @@ public class Conll extends ArrayList<ArrayList<String>> {
 
             doc.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
             doc.append("<root>\n");
+            
+            HashMap<Integer,String> map;
+            
+            String word;
+            String lemma;
+            String svm;
 
             for (ArrayList<String> sentence : this) {
                 doc.append("\t<s>\n");
                 for (String line : sentence) {
-                    String[] lineParts = line.replaceAll(" ", "	").split("	");
+                    map = DataUtils.conllLineAsMap(line, iConllMap);
 
+                    word = map.get(Conll.TOKEN_FORM);
+                    lemma = map.get(Conll.TOKEN_LEMMA);
+                    svm = map.get(Conll.TOKEN_FULLTAG);
+                    
                     doc.append("\t\t<tok");
-                    if (!lineParts[2].equals("_")) {
+                    if (lemma != null && !lemma.equals("_")) {
                         doc.append(" lm=\"");
-                        doc.append(lineParts[2]);
+                        doc.append(lemma);
                         doc.append("\"");
                     }
-                    if (!lineParts[3].equals("_")) {
-                        String sumTag = (lineParts[5].equals("_")) ? lineParts[4] : lineParts[4] + lineParts[5];
+                    if (svm != null && !svm.equals("_")) {
                         doc.append(" svm=\"");
-                        doc.append(iConllMap.getProperty(sumTag));
+                        doc.append(svm);
                         doc.append("\"");
                     }
                     doc.append(">");
-                    doc.append(lineParts[1]);
+                    doc.append(word);
                     doc.append("</tok>\n");
                 }
                 doc.append("\t</s>\n");

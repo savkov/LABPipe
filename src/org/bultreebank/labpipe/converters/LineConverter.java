@@ -156,7 +156,7 @@ public class LineConverter {
 
                 line = line.trim();
 
-                if (line.startsWith("##") || (!line.contains(" ") && !line.contains(eosToken))) {
+                if (line.startsWith("##") || (!(line.contains(" ") || line.contains("\t")) && !line.contains(eosToken))) {
                     continue;
                 }
                 if (line.contains(eosToken)) {
