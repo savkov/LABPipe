@@ -89,11 +89,17 @@ public class SVMTagger {
             sentence.ensureCapacity(100);
             br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(lines.getBytes(ServiceConstants.PIPE_CHARACTER_ENCODING))));
             String line = "";
+            
+            String eos = options.getProperty(Configuration.EOS_TOKEN);
+            
             while ((line = br.readLine()) != null) {
 
-                if (line.startsWith(options.getProperty(Configuration.EOS_TOKEN))) {
+                if (line.startsWith(eos)) {
+                    if (sentence.isEmpty()) {
+                        continue;
+                    }
                     sb.append(Misc.joinColumns(sentence.toArray((String[]) new String[0]), SVMTagger.tagList(sentence, options), " "));
-                    sb.append(options.getProperty(Configuration.EOS_TOKEN));
+                    sb.append(eos);
                     sb.append("\n");
                     sentence = new ArrayList();
                     sentence.ensureCapacity(100);
@@ -107,7 +113,7 @@ public class SVMTagger {
 
             if (sentence.size() > 0) {
                 sb.append(Misc.joinColumns(sentence.toArray((String[]) new String[0]), SVMTagger.tagList(sentence, options), " "));
-                sb.append(options.getProperty(Configuration.EOS_TOKEN));
+                sb.append(eos);
                 sb.append("\n");
             }
 

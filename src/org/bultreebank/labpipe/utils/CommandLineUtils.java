@@ -20,11 +20,7 @@
  */
 package org.bultreebank.labpipe.utils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -199,7 +195,8 @@ public class CommandLineUtils {
     /**
      * Copyright message
      */
-    public static final String COPYRIGHT_MESSEGE = "\nLABPipe  Copyright (C) 2011 Aleksandar Savkov\n"
+    public static final String COPYRIGHT_MESSEGE = 
+            "\nLABPipe  Copyright (C) 2011 Institute for Information and Communication Technologies\n"
             + "This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\n"
             + "This is free software, and you are welcome to redistribute it\n"
             + "under certain conditions; type `show c' for details.\n";
@@ -527,4 +524,72 @@ public class CommandLineUtils {
         return false;
 
     }
+    
+    public static boolean diffConll(String testFile, String goldFile) {
+        
+        System.out.print("Test file: " + testFile + "\nGold file: " + goldFile);
+
+        BufferedReader br1 = null;
+        BufferedReader br2 = null;
+        int diffs = 0;
+        int count = 0;
+        boolean diff = false;
+        try {
+            br1 = new BufferedReader(new InputStreamReader(new FileInputStream(testFile), "UTF-8"));
+            br2 = new BufferedReader(new InputStreamReader(new FileInputStream(goldFile), "UTF-8"));
+            String line1;
+            String line2;
+            
+            String[] testLine;
+            String[] goldLine;
+            
+            boolean detailDiff;
+
+            lines: while ((line1 = br1.readLine()) != null && (line2 = br2.readLine()) != null) {
+                if (!line1.equals(line2)) {
+                    
+                    detailDiff = false;
+                    
+                    testLine = line1.split("\t");
+                    goldLine = line2.split("\t");
+                    
+                    for (int i = 0; i < goldLine.length; i++) {
+                        if (i == goldLine.length - 1 && goldLine[i].equals("_") && !testLine.equals("_") && !detailDiff) 
+                            continue lines;
+                        if (!testLine[i].equals(goldLine[i])) {
+                            testLine[i] += "<--";
+                            detailDiff = true;
+                        }
+                    }
+                    
+                    diffs++;
+                    System.out.println(Misc.join(testLine, "\t") + "\n" + line2);
+                    diff = true;
+                }
+
+                count++;
+            }
+            if (!diff) {
+                System.out.println("\t...identical!\n");
+            } else {
+                System.out.println("\t...different!\n");
+            }
+
+            return diff;
+
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, "Check your sample directory content.", ex);
+        } finally {
+            try {
+                br1.close();
+                br2.close();
+            } catch (IOException ex) {
+                logger.log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return false;
+        
+    }
+    
 }

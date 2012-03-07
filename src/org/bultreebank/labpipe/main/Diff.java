@@ -56,7 +56,9 @@ public class Diff {
         for (int i = 0; i < test.size(); i++) {
             String testFile = test.get(i);
             String goldFile = gold.get(i);
-            if (testFile.endsWith("line") || testFile.endsWith("gaze") || testFile.endsWith("conll")) {
+            if (testFile.contains("conll")) {
+                count += CommandLineUtils.diffConll(testFile, goldFile) ? 0 : 1;
+            } else if (testFile.endsWith("line") || testFile.endsWith("gaze") || testFile.endsWith("conll") || testFile.endsWith("txt")) {
                 count += CommandLineUtils.diffLines(testFile, goldFile) ? 0 : 1;
             } else {
                 count += XmlUtils.xmlDiff(testFile, goldFile) ? 0 : 1;

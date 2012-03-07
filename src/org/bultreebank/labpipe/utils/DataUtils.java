@@ -308,7 +308,11 @@ public class DataUtils {
         if (tag.contains("punct") || tag.contains("Punct")) {
             conll.add("Punct");
         } else if (tag.length() > 2 && tag.charAt(1) != '-') {
-            conll.add(tag.substring(0, 2));
+            if (tag.startsWith("V")) {
+                conll.add(tag.substring(0, 3));
+            } else {
+                conll.add(tag.substring(0, 2));
+            }
         } else if (tag.length() > 2 && tag.charAt(1) == '-') {
             conll.add(String.valueOf(tag.charAt(0)));
         } else {

@@ -235,24 +235,16 @@ public class Conll extends ArrayList<ArrayList<String>> {
     public String toLine(String eosToken, Properties iConllMap) {
 
         StringBuilder lines = new StringBuilder();
+        HashMap map;
 
         for (ArrayList<String> sentence : this) {
 
             for (String line : sentence) {
 
-                line = line.replaceAll("	", " ");
-                String[] lineSplits = line.split(" ");
-                lines.append(lineSplits[1]);
-                lines.append(" ");
-                lines.append(lineSplits[4]);
-                String iFeatures = iConllMap.getProperty(lineSplits[5]);
-                if (iFeatures != null) {
-                    lines.append(iFeatures);
-                }
-                if (!lineSplits[2].matches("_")) {
-                    lines.append(" ");
-                    lines.append(lineSplits[2]);
-                }
+                map = DataUtils.conllLineAsMap(line, iConllMap);
+                lines.append(map.get(Conll.TOKEN_FORM));
+                lines.append("\t");
+                lines.append(map.get(Conll.TOKEN_FULLTAG));
                 lines.append("\n");
 
             }
